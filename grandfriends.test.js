@@ -57,6 +57,15 @@ describe('data model', () => {
   test('the data array is frozen against accidental mutation', () => {
     expect(Object.isFrozen(GF.PLACES)).toBe(true);
   });
+
+  test('every place points at an icon that actually exists in the sprite', () => {
+    GF.PLACES.forEach((place) => {
+      const symbol = document.getElementById(place.icon);
+      expect(symbol).not.toBeNull();
+      expect(symbol.tagName.toLowerCase()).toBe('symbol');
+      expect(symbol.getAttribute('viewBox')).toBe('0 0 64 64');
+    });
+  });
 });
 
 describe('clampIndex', () => {
