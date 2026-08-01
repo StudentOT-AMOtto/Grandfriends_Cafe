@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en-GB" class="text-normal">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grandfriends Café — getting online in Hawksworth Wood</title>
+<meta name="description" content="Friendly, plain-English guides to using the internet for everyday things in Hawksworth Wood, Leeds. Pick a place on the map to see the guides for it.">
+<meta name="theme-color" content="#14312B">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2314312B' d='M0 0h24v24H0z'/%3E%3Cpath fill='none' stroke='%23F1EEE3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bitter:wght@600;700&display=swap">
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
+
+<style>
+/* ============================================================
+   1. DESIGN TOKENS
+   Body face is Atkinson Hyperlegible — designed by the Braille
+   Institute for low-vision readers, so 1/l/I and 0/O stay
+   distinguishable. Display face is Bitter, a sturdy slab with
+   enough weight to read at a glance.
+   ============================================================ */
+:root{
+  --ink:#14312B;          /* deep pine — primary text + header */
+  --ink-soft:#3D5952;     /* secondary text, still 7:1 on paper */
+  --paper:#F1EEE3;        /* warm oat page background */
+  --card:#FFFFFF;
+  --line:#CFCAB8;
+  --pillar:#B3122C;       /* Royal Mail pillar-box red, 6.9:1 on white */
+  --brass:#E39A1F;
+  --ring:#14312B;         /* focus ring, re-declared on dark areas */
+
+  --space:1rem;
+  --radius:14px;
+  --measure:64ch;
+  --tap:3.25rem;          /* minimum interactive height (>44px at all sizes) */
+
+  --shadow:0 2px 0 rgba(20,49,43,.14), 0 8px 22px -14px rgba(20,49,43,.5);
+}
+
+/* Text size steps. Applied to <html> so every rem scales at once. */
+html.text-normal{font-size:18px}
+html.text-large{font-size:22px}
+html.text-largest{font-size:26px}
+
+/* High contrast: yellow-on-black, an RNIB-recommended pairing for
+   low vision. Borders thicken so shapes survive without colour. */
+html.hc{
+  --ink:#FFFFFF;
+  --ink-soft:#F2F2F2;
+  --paper:#000000;
+  --card:#000000;
+  --line:#FFD400;
+  --pillar:#FFD400;
+  --brass:#FFD400;
+  --ring:#FFD400;
+  --shadow:none;
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body,h1,h2,h3,p,ul,ol,li,figure,dialog{margin:0;padding:0}
+ul,ol{list-style:none}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
+  font-size:1rem;
+  line-height:1.65;
+  -webkit-text-size-adjust:100%;
+}
+
+h1,h2,h3{font-family:Bitter,Georgia,"Times New Roman",serif;line-height:1.2;font-weight:700}
+
+p{max-width:var(--measure)}
+
+a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:.12em}
+a:hover{text-decoration-thickness:.2em}
+
+/* One focus style for the whole site. --ring is swapped on dark
+   surfaces so the indicator is never invisible. */
+:where(a,button,[tabindex],.leaflet-marker-icon):focus-visible{
+  outline:4px solid var(--ring);
+  outline-offset:3px;
+  border-radius:6px;
+}
+
+.visually-hidden{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+.skip-link{
+  position:absolute;left:.5rem;top:-6rem;z-index:1200;
+  background:var(--brass);color:#14312B;font-weight:700;
+  padding:.85rem 1.25rem;border-radius:0 0 var(--radius) var(--radius);
+  transition:top .15s ease-out;
+}
+.skip-link:focus{top:0}
+
+.wrap{width:min(100% - 2rem,74rem);margin-inline:auto}
+
+/* ============================================================
+   3. HEADER
+   ============================================================ */
+.banner{
+  --ring:#FFD86B;
+  background:var(--ink);
+  color:var(--paper);
+  padding-block:2.25rem 1.75rem;
+  border-bottom:6px solid var(--brass);
+}
+html.hc .banner{background:#000;border-bottom-color:#FFD400}
+
+.banner__eyebrow{
+  font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--brass);margin-bottom:.4rem;
+}
+html.hc .banner__eyebrow{color:#FFD400}
+
+.banner h1{font-size:clamp(2.1rem,6vw,3.1rem);letter-spacing:-.01em}
+.banner__lede{margin-top:.85rem;font-size:1.12rem;max-width:52ch;color:#E7E3D6}
+html.hc .banner__lede{color:#fff}
+
+/* Settings bar */
+.settings{
+  margin-top:1.75rem;padding-top:1.35rem;
+  border-top:2px solid rgba(241,238,227,.28);
+  display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;align-items:flex-start;
+}
+html.hc .settings{border-top-color:#FFD400}
+
+.settings__group{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.settings__label{font-weight:700;font-size:1rem;margin-right:.25rem}
+
+.chip{
+  min-height:var(--tap);
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.5rem 1.15rem;
+  font:inherit;font-weight:700;
+  background:transparent;color:var(--paper);
+  border:3px solid rgba(241,238,227,.55);
+  border-radius:999px;cursor:pointer;
+}
+.chip:hover{border-color:var(--brass)}
+.chip[aria-pressed="true"]{background:var(--brass);color:#14312B;border-color:var(--brass)}
+html.hc .chip{border-color:#FFD400;color:#fff}
+html.hc .chip[aria-pressed="true"]{background:#FFD400;color:#000}
+
+/* ============================================================
+   4. MAIN — FINDER
+   ============================================================ */
+main{padding-block:2.5rem 3rem}
+
+.section-head{margin-bottom:1.5rem}
+.section-head h2{font-size:clamp(1.6rem,4vw,2.1rem)}
+.section-head p{margin-top:.6rem;font-size:1.08rem;color:var(--ink-soft)}
+html.hc .section-head p{color:#fff}
+
+.finder{display:grid;gap:1.5rem;grid-template-columns:1fr}
+@media (min-width:60rem){
+  .finder{grid-template-columns:minmax(0,1.35fr) minmax(21rem,1fr);align-items:start}
+}
+
+/* Map */
+.map-frame{
+  background:var(--card);
+  border:3px solid var(--ink);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+html.hc .map-frame{border-color:#FFD400}
+
+#map{
+  height:clamp(24rem,58vh,32rem);
+  background:#DDD9CC;
+}
+html.hc .leaflet-tile-pane{filter:grayscale(1) contrast(1.35) brightness(.82)}
+
+.map-note{
+  padding:.75rem 1rem;border-top:2px solid var(--line);
+  font-size:.92rem;color:var(--ink-soft);
+}
+html.hc .map-note{color:#fff}
+
+.map-fallback{padding:1.5rem;font-size:1.05rem}
+
+/* Leaflet controls sized for real fingers */
+.leaflet-touch .leaflet-bar a{width:2.6rem;height:2.6rem;line-height:2.6rem;font-size:1.4rem}
+.leaflet-container{font-family:inherit;font-size:.9rem}
+.leaflet-container a{color:var(--pillar)}
+
+/* Custom markers */
+.pin{background:none;border:0}
+.pin__body{
+  width:3rem;height:3rem;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--card);color:var(--ink);
+  border:3px solid var(--ink);border-radius:12px;
+  box-shadow:0 3px 0 rgba(20,49,43,.35);
+  cursor:pointer;
+}
+.pin__body svg{width:1.65rem;height:1.65rem}
+.pin__num{
+  position:absolute;top:-.55rem;right:-.55rem;
+  min-width:1.5rem;height:1.5rem;padding:0 .3rem;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--pillar);color:#fff;
+  font-size:.85rem;font-weight:700;line-height:1;
+  border-radius:999px;border:2px solid var(--card);
+}
+html.hc .pin__body{background:#000;color:#FFD400;border-color:#FFD400}
+html.hc .pin__num{background:#FFD400;color:#000;border-color:#000}
+
+/* Place list — the same five destinations, reachable without the map */
+.places{display:grid;gap:.85rem}
+
+.place{
+  width:100%;min-height:var(--tap);
+  display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;
+  padding:1rem 1.1rem;text-align:left;
+  font:inherit;color:var(--ink);
+  background:var(--card);
+  border:3px solid var(--ink);border-radius:var(--radius);
+  box-shadow:var(--shadow);cursor:pointer;
+}
+.place:hover{background:#FFFBF0}
+html.hc .place{background:#000;border-color:#FFD400;color:#fff}
+html.hc .place:hover{background:#1a1a1a}
+
+.place__icon{
+  width:3.1rem;height:3.1rem;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--paper);border-radius:10px;position:relative;
+}
+.place__icon svg{width:1.8rem;height:1.8rem}
+html.hc .place__icon{background:#000;border:2px solid #FFD400;color:#FFD400}
+
+.place__num{
+  position:absolute;top:-.5rem;left:-.5rem;
+  min-width:1.4rem;height:1.4rem;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--pillar);color:#fff;
+  font-size:.8rem;font-weight:700;border-radius:999px;
+}
+html.hc .place__num{background:#FFD400;color:#000}
+
+.place__name{font-family:Bitter,Georgia,serif;font-weight:700;font-size:1.12rem;line-height:1.25}
+.place__kind{display:block;font-family:inherit;font-weight:400;font-size:.95rem;color:var(--ink-soft);margin-top:.15rem}
+html.hc .place__kind{color:#fff}
+.place__go{font-size:1.5rem;color:var(--pillar);flex:none}
+
+/* ============================================================
+   5. GUIDE DIALOG
+   ============================================================ */
+#guide-dialog{
+  width:min(100% - 1.5rem,46rem);
+  max-height:88vh;
+  padding:0;margin:auto;
+  color:var(--ink);background:var(--card);
+  border:4px solid var(--ink);border-radius:var(--radius);
+  box-shadow:0 24px 60px -20px rgba(20,49,43,.65);
+}
+#guide-dialog::backdrop{background:rgba(20,49,43,.72)}
+html.hc #guide-dialog{background:#000;border-color:#FFD400;color:#fff}
+html.hc #guide-dialog::backdrop{background:rgba(0,0,0,.92)}
+
+/* Fallback path for browsers without showModal() */
+#guide-dialog:not([open]){display:none}
+#guide-dialog.is-fallback{position:fixed;inset:2rem auto auto 50%;transform:translateX(-50%);z-index:1000}
+
+.dialog__head{
+  position:sticky;top:0;z-index:2;
+  display:flex;gap:1rem;align-items:flex-start;justify-content:space-between;
+  padding:1.35rem 1.35rem 1.1rem;
+  background:var(--ink);color:var(--paper);
+}
+html.hc .dialog__head{background:#000;border-bottom:3px solid #FFD400}
+.dialog__head .close{--ring:#FFD86B}
+
+.dialog__title{font-size:1.5rem;line-height:1.2}
+.dialog__where{margin-top:.35rem;font-size:.98rem;color:#DCD7C8}
+html.hc .dialog__where{color:#fff}
+
+.close{
+  flex:none;min-height:var(--tap);
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.5rem 1.1rem;font:inherit;font-weight:700;
+  background:var(--brass);color:#14312B;
+  border:3px solid var(--brass);border-radius:999px;cursor:pointer;
+}
+html.hc .close{background:#FFD400;color:#000;border-color:#FFD400}
+
+.dialog__body{padding:1.35rem;overflow-y:auto;max-height:calc(88vh - 8rem)}
+
+.draft-note{
+  display:flex;gap:.7rem;align-items:flex-start;
+  padding:.85rem 1rem;margin-bottom:1.25rem;
+  background:#FDF3DC;border-left:6px solid var(--brass);border-radius:8px;
+  font-size:.98rem;
+}
+html.hc .draft-note{background:#000;border:3px solid #FFD400;color:#fff}
+
+.guide{padding:1.15rem 0;border-top:2px solid var(--line)}
+.guide:first-of-type{border-top:0;padding-top:0}
+.guide h3{font-size:1.22rem}
+.guide__summary{margin-top:.4rem;color:var(--ink-soft)}
+html.hc .guide__summary{color:#fff}
+
+.guide__steps{margin-top:.9rem;display:grid;gap:.7rem;counter-reset:step}
+.guide__steps li{
+  position:relative;padding-left:2.6rem;counter-increment:step;
+}
+.guide__steps li::before{
+  content:counter(step);
+  position:absolute;left:0;top:.05rem;
+  width:1.9rem;height:1.9rem;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--ink);color:var(--paper);
+  font-size:.9rem;font-weight:700;border-radius:999px;
+}
+html.hc .guide__steps li::before{background:#FFD400;color:#000}
+
+.dialog__foot{
+  padding:1.1rem 1.35rem 1.4rem;border-top:2px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:.85rem;align-items:center;
+}
+.dialog__foot .close{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+html.hc .dialog__foot .close{background:#FFD400;color:#000;border-color:#FFD400}
+.dialog__foot p{font-size:.95rem;color:var(--ink-soft)}
+html.hc .dialog__foot p{color:#fff}
+
+/* ============================================================
+   6. FOOTER
+   ============================================================ */
+.site-foot{
+  --ring:#FFD86B;
+  margin-top:1rem;padding-block:2.25rem 3rem;
+  background:var(--ink);color:#E7E3D6;
+}
+html.hc .site-foot{background:#000;color:#fff;border-top:3px solid #FFD400}
+.site-foot h2{font-size:1.3rem;color:var(--paper)}
+.site-foot p{margin-top:.6rem}
+.site-foot a{color:var(--brass)}
+html.hc .site-foot a{color:#FFD400}
+
+/* ============================================================
+   7. MOTION
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to the places</a>
+
+<!-- Icon sprite. Stroke-based, 24×24 grid, inherits colour. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <g id="gf-base" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
+  </defs>
+  <symbol id="gf-cafe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.5 9h12.5v5a5 5 0 0 1-5 5H9.5a5 5 0 0 1-5-5V9Z"/>
+    <path d="M17 10h1.6a2.5 2.5 0 0 1 0 5H17"/>
+    <path d="M8.5 3v2.4M12.5 3v2.4"/>
+    <path d="M3 21.2h16"/>
+  </symbol>
+  <symbol id="gf-post" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.6 21V9.4a5.4 5.4 0 0 1 10.8 0V21"/>
+    <path d="M4.4 21h15.2"/>
+    <path d="M9.2 11.4h5.6"/>
+    <path d="M9.6 15.6h4.8"/>
+  </symbol>
+  <symbol id="gf-shop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.4 8.2h17.2l-1.6 10.1a2 2 0 0 1-2 1.7H7a2 2 0 0 1-2-1.7L3.4 8.2Z"/>
+    <path d="m8.6 8.2 2.5-4.6M15.4 8.2l-2.5-4.6"/>
+    <path d="M9.6 12.1v4M14.4 12.1v4"/>
+  </symbol>
+  <symbol id="gf-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="3.6" width="16" height="13.2" rx="2.6"/>
+    <path d="M4 10.2h16"/>
+    <path d="M7.2 16.8v2.6M16.8 16.8v2.6"/>
+    <circle cx="8.2" cy="13.6" r=".9" fill="currentColor" stroke="none"/>
+    <circle cx="15.8" cy="13.6" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="gf-gp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2 20 6v6.1c0 4.4-3.2 7.5-8 8.7-4.8-1.2-8-4.3-8-8.7V6l8-2.8Z"/>
+    <path d="M12 8.4v6.2M8.9 11.5h6.2"/>
+  </symbol>
+</svg>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="banner__eyebrow">Hawksworth Wood, Leeds</p>
+    <h1>Grandfriends Café</h1>
+    <p class="banner__lede">
+      A friendly hand with the online side of everyday life — your prescriptions,
+      your parcels, your bus times. Nothing here assumes you already know how.
+    </p>
+
+    <div class="settings" role="group" aria-label="Page settings">
+      <div class="settings__group">
+        <span class="settings__label" id="size-label">Text size</span>
+        <div role="group" aria-labelledby="size-label" style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button type="button" class="chip" data-size="normal"  aria-pressed="true">Normal</button>
+          <button type="button" class="chip" data-size="large"   aria-pressed="false">Larger</button>
+          <button type="button" class="chip" data-size="largest" aria-pressed="false">Largest</button>
+        </div>
+      </div>
+
+      <div class="settings__group">
+        <span class="settings__label" id="contrast-label">Colours</span>
+        <button type="button" class="chip" id="contrast-toggle"
+                aria-labelledby="contrast-label contrast-toggle" aria-pressed="false">
+          High contrast
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <div class="section-head">
+      <h2>Five places, and what you can do online at each</h2>
+      <p>
+        Choose a place on the map, or use the list beside it — both open the same guides.
+        There are five places: the café, the post office, the supermarket, the bus stop
+        and the doctor's surgery.
+      </p>
+    </div>
+
+    <noscript>
+      <p class="draft-note" style="max-width:none">
+        The map needs JavaScript switched on. The five places are:
+        Grandfriends Café, Hawksworth Estate Post Office (60A Lea Farm Road),
+        Co-op Food on Broadway, the Vesper Road bus stop, and Vesper Road Surgery
+        (43 Vesper Road). Call us on 0113 000 0000 and we will read any guide to you.
+      </p>
+    </noscript>
+
+    <div class="finder">
+      <div class="map-frame">
+        <div id="map" role="application"
+             aria-label="Map of Hawksworth Wood with five landmarks. Each landmark is also listed as a button below the map."></div>
+        <p class="map-note">
+          Map by OpenStreetMap contributors. Drag to move it. To zoom with a mouse wheel,
+          click the map once first — this stops it zooming while you scroll the page.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="visually-hidden">List of the five places</h3>
+        <ul class="places" id="places"></ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <h2>Would you rather someone showed you?</h2>
+    <p>
+      Bring your phone, tablet or letters to the café and someone will sit with you.
+      No appointment, no charge, and no question is too small.
+    </p>
+    <p>
+      Phone <a href="tel:+441130000000">0113 000 0000</a> ·
+      Hawksworth Wood, Leeds LS5
+    </p>
+    <p style="font-size:.9rem;margin-top:1.25rem">
+      Map data © <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors.
+    </p>
+  </div>
+</footer>
+
+<dialog id="guide-dialog" aria-labelledby="dialog-title">
+  <div class="dialog__head">
+    <div>
+      <h2 class="dialog__title" id="dialog-title"></h2>
+      <p class="dialog__where" id="dialog-where"></p>
+    </div>
+    <button type="button" class="close" data-close>Close ✕</button>
+  </div>
+  <div class="dialog__body" id="dialog-body"></div>
+  <div class="dialog__foot">
+    <button type="button" class="close" data-close>Close</button>
+    <p>Stuck? Ring 0113 000 0000 and we will talk it through.</p>
+  </div>
+</dialog>
+
+<p class="visually-hidden" id="announcer" role="status" aria-live="polite"></p>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<script>
+(function (win, doc) {
+  'use strict';
+
+  /* ==========================================================
+     TASK 1 — DATA
+     Single source of truth. Markers, list items and dialog
+     contents are all derived from this array, so adding a
+     landmark means adding one object here and nothing else.
+
+     NOTE FOR TOM: the two coordinates marked APPROX were read
+     off your screenshot. Replace them with exact values from
+     openstreetmap.org (right-click → "Show address") before
+     going live.
+     ========================================================== */
+  /** @type {ReadonlyArray<Object>} */
+  var PLACES = Object.freeze([
+    {
+      id: 'cafe',
+      number: 1,
+      name: 'Grandfriends Café',
+      kind: 'Café — where we meet',
+      address: 'Hawksworth Wood, Leeds LS5',
+      coords: [53.8303, -1.6129],           // APPROX — confirm
+      icon: 'gf-cafe',
+      guides: [
+        { title: 'Using the café wi-fi', draft: true,
+          summary: 'How to get your phone or tablet onto our free internet, once, so it remembers next time.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'What to bring to a help session', draft: true,
+          summary: 'The few things that make it much quicker for us to sort a problem out with you.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Spotting a scam message', draft: true,
+          summary: 'The signs that a text or email is not really from your bank, the DVLA or the Post Office.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+      ]
+    },
+    {
+      id: 'post-office',
+      number: 2,
+      name: 'Hawksworth Estate Post Office',
+      kind: 'Post office — inside Lea Farm Minimarket',
+      address: '60A Lea Farm Road, Leeds LS5 3PH',
+      coords: [53.829318, -1.612560],
+      icon: 'gf-post',
+      guides: [
+        { title: 'Sending back something you bought online', draft: true,
+          summary: 'How to get the return label on your phone, and what to show at the counter.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Tracking a parcel', draft: true,
+          summary: 'Where to type the tracking number, and what the different messages actually mean.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Checking the opening hours before you set off', draft: true,
+          summary: 'The counter hours are not always the same as the shop hours. Here is how to check.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+      ]
+    },
+    {
+      id: 'supermarket',
+      number: 3,
+      name: 'Co-op Food, Broadway',
+      kind: 'Supermarket',
+      address: 'Broadway, Hawksworth Wood, Leeds LS5 3PR',
+      coords: [53.828246, -1.616565],
+      icon: 'gf-shop',
+      guides: [
+        { title: 'Ordering your shopping to be delivered', draft: true,
+          summary: 'Choosing a shop, filling a basket and picking a delivery time — from start to finish.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Using the self-service till', draft: true,
+          summary: 'What each screen is asking you, and what to do when it says "unexpected item".',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Your membership card on your phone', draft: true,
+          summary: 'Getting the barcode up on screen so you still get your points without the plastic card.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+      ]
+    },
+    {
+      id: 'bus-stop',
+      number: 4,
+      name: 'Vesper Road bus stop',
+      kind: 'Bus stop — towards the city centre',
+      address: 'Vesper Road, Hawksworth Wood, Leeds LS5',
+      coords: [53.82715, -1.61165],          // APPROX — confirm
+      icon: 'gf-bus',
+      guides: [
+        { title: 'Checking when the next bus is really due', draft: true,
+          summary: 'Live times on your phone, so you are not stood in the rain guessing.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Planning a journey across Leeds', draft: true,
+          summary: 'Typing in where you are and where you want to be, and reading the answer.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Renewing your older person\u2019s bus pass', draft: true,
+          summary: 'What the online form asks for, and what to do if you would rather do it on paper.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+      ]
+    },
+    {
+      id: 'gp-surgery',
+      number: 5,
+      name: 'Vesper Road Surgery',
+      kind: 'GP surgery',
+      address: '43 Vesper Road, Leeds LS5 3QT',
+      coords: [53.826690, -1.612518],
+      icon: 'gf-gp',
+      guides: [
+        { title: 'Ordering a repeat prescription', draft: true,
+          summary: 'Doing it from your armchair instead of ringing at eight in the morning.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Setting up the NHS App', draft: true,
+          summary: 'Proving who you are the first time, which is the part most people get stuck on.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
+        { title: 'Joining an appointment by video', draft: true,
+          summary: 'What the link in the text message does, and how to check your camera works first.',
+          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+      ]
+    }
+  ]);
+
+  var SIZES = ['normal', 'large', 'largest'];
+  var SIZE_LABELS = { normal: 'Normal', large: 'Larger', largest: 'Largest' };
+  var KEY_SIZE = 'gf.textSize';
+  var KEY_HC = 'gf.highContrast';
+
+  /* ==========================================================
+     TASK 2 — SAFE STORAGE
+     localStorage throws in some private/sandboxed contexts.
+     Feature-detect once and hand back an identical interface
+     either way, so no caller ever needs a try/catch.
+     ========================================================== */
+  /**
+   * @param {Window} w
+   * @returns {{getItem:(k:string)=>?string, setItem:(k:string,v:string)=>void, removeItem:(k:string)=>void}}
+   */
+  function createStore(w) {
+    try {
+      var probe = '__gf_probe__';
+      w.localStorage.setItem(probe, '1');
+      w.localStorage.removeItem(probe);
+      return w.localStorage;
+    } catch (err) {
+      var mem = {};
+      return {
+        getItem: function (k) { return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null; },
+        setItem: function (k, v) { mem[k] = String(v); },
+        removeItem: function (k) { delete mem[k]; }
+      };
+    }
+  }
+
+  var store = createStore(win);
+
+  /* ==========================================================
+     TASK 3 — PURE HELPERS
+     Kept free of DOM access so they can be unit tested.
+     ========================================================== */
+
+  /**
+   * Clamp (never wrap) an index into a list. Guards against the
+   * off-by-one where "Largest" would loop back to "Normal".
+   * @param {number} index
+   * @param {number} length
+   * @returns {number}
+   */
+  function clampIndex(index, length) {
+    if (!Number.isInteger(length) || length < 1) { return 0; }
+    var i = Number.isInteger(index) ? index : 0;
+    return Math.min(Math.max(i, 0), length - 1);
+  }
+
+  /**
+   * @param {string} value
+   * @returns {string} a valid size name, falling back to 'normal'
+   */
+  function normaliseSize(value) {
+    return SIZES.indexOf(value) === -1 ? SIZES[0] : value;
+  }
+
+  /**
+   * @param {string} id
+   * @returns {?Object} the matching place, or null
+   */
+  function findPlace(id) {
+    if (typeof id !== 'string' || id === '') { return null; }
+    for (var i = 0; i < PLACES.length; i += 1) {
+      if (PLACES[i].id === id) { return PLACES[i]; }
+    }
+    return null;
+  }
+
+  /* ==========================================================
+     TASK 4 — DOM HELPERS
+     ========================================================== */
+  var announcer = doc.getElementById('announcer');
+
+  /** @param {string} message */
+  function announce(message) {
+    if (!announcer) { return; }
+    announcer.textContent = '';
+    win.setTimeout(function () { announcer.textContent = String(message); }, 60);
+  }
+
+  /**
+   * @param {string} symbolId
+   * @returns {SVGSVGElement}
+   */
+  function makeIcon(symbolId) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = doc.createElementNS(NS, 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    var use = doc.createElementNS(NS, 'use');
+    use.setAttribute('href', '#' + symbolId);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  /* ==========================================================
+     TASK 5 — SETTINGS: TEXT SIZE + HIGH CONTRAST
+     Both write a class on <html> and persist the choice.
+     ========================================================== */
+  var root = doc.documentElement;
+  var sizeButtons = Array.prototype.slice.call(doc.querySelectorAll('[data-size]'));
+  var contrastButton = doc.getElementById('contrast-toggle');
+
+  /**
+   * @param {string} size
+   * @param {boolean} shouldAnnounce
+   */
+  function applySize(size, shouldAnnounce) {
+    var safe = normaliseSize(size);
+    SIZES.forEach(function (s) { root.classList.remove('text-' + s); });
+    root.classList.add('text-' + safe);
+    sizeButtons.forEach(function (btn) {
+      btn.setAttribute('aria-pressed', String(btn.getAttribute('data-size') === safe));
+    });
+    store.setItem(KEY_SIZE, safe);
+    if (shouldAnnounce) { announce('Text size set to ' + SIZE_LABELS[safe] + '.'); }
+  }
+
+  /**
+   * @param {boolean} on
+   * @param {boolean} shouldAnnounce
+   */
+  function applyContrast(on, shouldAnnounce) {
+    var enabled = Boolean(on);
+    root.classList.toggle('hc', enabled);
+    if (contrastButton) { contrastButton.setAttribute('aria-pressed', String(enabled)); }
+    store.setItem(KEY_HC, enabled ? '1' : '0');
+    if (shouldAnnounce) { announce(enabled ? 'High contrast colours turned on.' : 'Normal colours turned on.'); }
+  }
+
+  sizeButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () { applySize(btn.getAttribute('data-size'), true); });
+  });
+
+  if (contrastButton) {
+    contrastButton.addEventListener('click', function () {
+      applyContrast(contrastButton.getAttribute('aria-pressed') !== 'true', true);
+    });
+  }
+
+  applySize(store.getItem(KEY_SIZE) || 'normal', false);
+  applyContrast(store.getItem(KEY_HC) === '1', false);
+
+  /* ==========================================================
+     TASK 6 — GUIDE DIALOG
+     Native <dialog> supplies the focus trap, the inert
+     background, Escape-to-close and focus restoration. The
+     fallback covers browsers older than Safari 15.4.
+     ========================================================== */
+  var dialog = doc.getElementById('guide-dialog');
+  var dialogTitle = doc.getElementById('dialog-title');
+  var dialogWhere = doc.getElementById('dialog-where');
+  var dialogBody = doc.getElementById('dialog-body');
+  var supportsModal = Boolean(dialog && typeof dialog.showModal === 'function');
+  var lastFocused = null;
+
+  /**
+   * Build the guide list for one place. Uses textContent
+   * throughout — content is authored by hand later, and this
+   * keeps a stray angle bracket from breaking the page.
+   * @param {Object} place
+   */
+  function renderGuides(place) {
+    dialogBody.textContent = '';
+
+    var hasDraft = place.guides.some(function (g) { return g.draft === true; });
+    if (hasDraft) {
+      var note = doc.createElement('p');
+      note.className = 'draft-note';
+      note.appendChild(doc.createTextNode(
+        'These guides are still being written. The headings show what is coming; ' +
+        'in the meantime, ring us and we will walk you through it.'
+      ));
+      dialogBody.appendChild(note);
+    }
+
+    place.guides.forEach(function (guide) {
+      var article = doc.createElement('article');
+      article.className = 'guide';
+
+      var h3 = doc.createElement('h3');
+      h3.textContent = guide.title;
+      article.appendChild(h3);
+
+      if (guide.summary) {
+        var summary = doc.createElement('p');
+        summary.className = 'guide__summary';
+        summary.textContent = guide.summary;
+        article.appendChild(summary);
+      }
+
+      if (Array.isArray(guide.steps) && guide.steps.length > 0) {
+        var ol = doc.createElement('ol');
+        ol.className = 'guide__steps';
+        guide.steps.forEach(function (step) {
+          var li = doc.createElement('li');
+          li.textContent = step;
+          ol.appendChild(li);
+        });
+        article.appendChild(ol);
+      }
+
+      dialogBody.appendChild(article);
+    });
+  }
+
+  /** @param {string} placeId */
+  function openGuides(placeId) {
+    var place = findPlace(placeId);
+    if (!place || !dialog) { return; }
+
+    lastFocused = doc.activeElement;
+    dialogTitle.textContent = place.name;
+    dialogWhere.textContent = place.kind + ' · ' + place.address;
+    renderGuides(place);
+
+    if (supportsModal) {
+      dialog.showModal();
+    } else {
+      dialog.classList.add('is-fallback');
+      dialog.setAttribute('open', '');
+    }
+    dialogBody.scrollTop = 0;
+
+    var firstClose = dialog.querySelector('[data-close]');
+    if (firstClose) { firstClose.focus(); }
+    announce('Guides for ' + place.name + ' opened.');
+  }
+
+  function closeGuides() {
+    if (!dialog) { return; }
+    if (supportsModal && dialog.open) {
+      dialog.close();
+    } else {
+      dialog.removeAttribute('open');
+      dialog.classList.remove('is-fallback');
+      if (lastFocused && typeof lastFocused.focus === 'function') { lastFocused.focus(); }
+    }
+  }
+
+  if (dialog) {
+    Array.prototype.forEach.call(dialog.querySelectorAll('[data-close]'), function (btn) {
+      btn.addEventListener('click', closeGuides);
+    });
+
+    // Clicking the dark backdrop closes it — a familiar escape hatch.
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) { closeGuides(); }
+    });
+
+    // Escape is handled natively, but this covers the fallback path.
+    doc.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !supportsModal && dialog.hasAttribute('open')) {
+        closeGuides();
+      }
+    });
+  }
+
+  /* ==========================================================
+     TASK 7 — PLACE LIST
+     Rendered first and independently of Leaflet, so the site
+     is fully usable even if the map never loads.
+     ========================================================== */
+  var list = doc.getElementById('places');
+
+  PLACES.forEach(function (place) {
+    var li = doc.createElement('li');
+
+    var btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.className = 'place';
+    btn.setAttribute('data-place', place.id);
+
+    var iconWrap = doc.createElement('span');
+    iconWrap.className = 'place__icon';
+    var num = doc.createElement('span');
+    num.className = 'place__num';
+    num.textContent = String(place.number);
+    iconWrap.appendChild(num);
+    iconWrap.appendChild(makeIcon(place.icon));
+
+    var text = doc.createElement('span');
+    var name = doc.createElement('span');
+    name.className = 'place__name';
+    name.textContent = place.name;
+    var kind = doc.createElement('span');
+    kind.className = 'place__kind';
+    kind.textContent = place.kind;
+    text.appendChild(name);
+    text.appendChild(kind);
+
+    var go = doc.createElement('span');
+    go.className = 'place__go';
+    go.setAttribute('aria-hidden', 'true');
+    go.textContent = '›';
+
+    // Spoken label states the outcome, not just the name.
+    btn.setAttribute('aria-label', 'Show online guides for ' + place.name + ', ' + place.kind);
+
+    btn.appendChild(iconWrap);
+    btn.appendChild(text);
+    btn.appendChild(go);
+    btn.addEventListener('click', function () { openGuides(place.id); });
+
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+
+  /* ==========================================================
+     TASK 8 — MAP (PROGRESSIVE ENHANCEMENT)
+     ========================================================== */
+  function showMapFallback() {
+    var container = doc.getElementById('map');
+    if (!container) { return; }
+    container.removeAttribute('role');
+    container.removeAttribute('aria-label');
+    container.style.height = 'auto';
+    container.innerHTML = '';
+    var msg = doc.createElement('p');
+    msg.className = 'map-fallback';
+    msg.textContent = 'The map could not load this time, most likely because the internet '
+      + 'connection dropped. Everything still works — use the list of five places instead.';
+    container.appendChild(msg);
+  }
+
+  function initMap() {
+    if (typeof win.L === 'undefined') { showMapFallback(); return; }
+    var L = win.L;
+
+    var map = L.map('map', {
+      scrollWheelZoom: false,   // stops the page-scroll trap
+      zoomControl: true,
+      keyboard: true
+    });
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      minZoom: 13,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Wheel zoom only after a deliberate interaction.
+    map.on('click focus', function () { map.scrollWheelZoom.enable(); });
+    map.on('blur', function () { map.scrollWheelZoom.disable(); });
+
+    var markers = [];
+
+    PLACES.forEach(function (place) {
+      var html =
+        '<div class="pin__body">' +
+          '<span class="pin__num">' + place.number + '</span>' +
+          '<svg aria-hidden="true" focusable="false"><use href="#' + place.icon + '"></use></svg>' +
+        '</div>';
+
+      var marker = L.marker(place.coords, {
+        icon: L.divIcon({ className: 'pin', html: html, iconSize: [48, 48], iconAnchor: [24, 24] }),
+        keyboard: true,
+        title: place.name,
+        alt: 'Show online guides for ' + place.name,
+        riseOnHover: true
+      }).addTo(map);
+
+      marker.on('click keypress', function (event) {
+        var key = event.originalEvent && event.originalEvent.key;
+        if (key && key !== 'Enter' && key !== ' ') { return; }
+        openGuides(place.id);
+      });
+
+      markers.push(marker);
+    });
+
+    // Frame all five, then fence the map in so nobody gets lost.
+    var group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds(), { padding: [56, 56], maxZoom: 17 });
+    map.setMaxBounds(group.getBounds().pad(1.4));
+  }
+
+  initMap();
+
+  /* Exposed for unit tests only — see tests/grandfriends.test.js */
+  win.GF = { PLACES: PLACES, SIZES: SIZES, createStore: createStore,
+             clampIndex: clampIndex, normaliseSize: normaliseSize, findPlace: findPlace };
+
+}(window, document));
+</script>
+</body>
+</html>
