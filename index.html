@@ -202,15 +202,17 @@ html.hc .map-note{color:#fff}
 
 /* Custom markers */
 .pin{background:none;border:0}
+/* Sized in px, not rem: map pins must stay in step with Leaflet's
+   iconSize, and would otherwise swamp the map at "Largest" text. */
 .pin__body{
-  width:3rem;height:3rem;
+  width:56px;height:56px;
   display:flex;align-items:center;justify-content:center;
-  background:var(--card);color:var(--ink);
-  border:3px solid var(--ink);border-radius:12px;
+  background:var(--card);
+  border:3px solid var(--ink);border-radius:14px;
   box-shadow:0 3px 0 rgba(20,49,43,.35);
   cursor:pointer;
 }
-.pin__body svg{width:1.65rem;height:1.65rem}
+.pin__body svg{width:44px;height:44px}
 .pin__num{
   position:absolute;top:-.55rem;right:-.55rem;
   min-width:1.5rem;height:1.5rem;padding:0 .3rem;
@@ -219,7 +221,9 @@ html.hc .map-note{color:#fff}
   font-size:.85rem;font-weight:700;line-height:1;
   border-radius:999px;border:2px solid var(--card);
 }
-html.hc .pin__body{background:#000;color:#FFD400;border-color:#FFD400}
+/* The illustrations are multi-colour, so high contrast keeps a white
+   tile behind them rather than inverting them into mush. */
+html.hc .pin__body{background:#FFF;border-color:#FFD400;border-width:4px}
 html.hc .pin__num{background:#FFD400;color:#000;border-color:#000}
 
 /* Place list — the same five destinations, reachable without the map */
@@ -239,12 +243,12 @@ html.hc .place{background:#000;border-color:#FFD400;color:#fff}
 html.hc .place:hover{background:#1a1a1a}
 
 .place__icon{
-  width:3.1rem;height:3.1rem;flex:none;
+  width:4.4rem;height:4.4rem;flex:none;
   display:flex;align-items:center;justify-content:center;
-  background:var(--paper);border-radius:10px;position:relative;
+  background:var(--paper);border-radius:12px;position:relative;
 }
-.place__icon svg{width:1.8rem;height:1.8rem}
-html.hc .place__icon{background:#000;border:2px solid #FFD400;color:#FFD400}
+.place__icon svg{width:3.5rem;height:3.5rem}
+html.hc .place__icon{background:#FFF;border:3px solid #FFD400}
 
 .place__num{
   position:absolute;top:-.5rem;left:-.5rem;
@@ -367,39 +371,108 @@ html.hc .site-foot a{color:#FFD400}
 
 <a class="skip-link" href="#main">Skip to the places</a>
 
-<!-- Icon sprite. Stroke-based, 24×24 grid, inherits colour. -->
+<!-- Icon sprite. Flat illustrations on a 64×64 grid. Drawn from scratch,
+     so nothing here is licensed from a stock library. Colours are fixed
+     rather than inherited, because these are multi-colour illustrations;
+     the tile behind them handles contrast instead. -->
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-  <defs>
-    <g id="gf-base" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
-  </defs>
-  <symbol id="gf-cafe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4.5 9h12.5v5a5 5 0 0 1-5 5H9.5a5 5 0 0 1-5-5V9Z"/>
-    <path d="M17 10h1.6a2.5 2.5 0 0 1 0 5H17"/>
-    <path d="M8.5 3v2.4M12.5 3v2.4"/>
-    <path d="M3 21.2h16"/>
+
+  <symbol id="gf-cafe" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="57.5" rx="23" ry="3" fill="#14312B" opacity=".15"/>
+    <rect x="9" y="21" width="46" height="35" rx="2" fill="#F7F1E3" stroke="#14312B" stroke-width="2"/>
+    <rect x="13.5" y="27" width="21" height="17" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="2"/>
+    <path d="M24 27v17M13.5 35.5h21" stroke="#14312B" stroke-width="1.3" fill="none"/>
+    <circle cx="17.5" cy="42" r="2.1" fill="#E4574B"/>
+    <circle cx="24" cy="41.6" r="2.1" fill="#F0B429"/>
+    <circle cx="30.5" cy="42" r="2.1" fill="#E4574B"/>
+    <rect x="12" y="44" width="24" height="6" rx="1.5" fill="#2E7D5B" stroke="#14312B" stroke-width="1.6"/>
+    <path d="M39 56V33a5.5 5.5 0 0 1 11 0v23z" fill="#8C5A3C" stroke="#14312B" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="41.8" cy="43" r="1.2" fill="#F0B429"/>
+    <path d="M6 15h8.7v7q-4.35 4.5-8.7 0z" fill="#C8102E"/>
+    <path d="M14.7 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M23.4 15h8.7v7q-4.35 4.5-8.7 0z" fill="#C8102E"/>
+    <path d="M32.1 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M40.8 15h8.7v7q-4.35 4.5-8.7 0z" fill="#C8102E"/>
+    <path d="M49.5 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M6 15h52.2v7q-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0z"
+          fill="none" stroke="#14312B" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="16" y="2" width="32" height="12" rx="2.5" fill="#8C5A3C" stroke="#14312B" stroke-width="2"/>
+    <path d="M25.8 5.6h8.4v3.6a2.8 2.8 0 0 1-2.8 2.8h-2.8a2.8 2.8 0 0 1-2.8-2.8z" fill="#F7F1E3"/>
+    <path d="M34.4 6.6h1.5a1.7 1.7 0 0 1 0 3.4h-1.5" fill="none" stroke="#F7F1E3" stroke-width="1.5"/>
   </symbol>
-  <symbol id="gf-post" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6.6 21V9.4a5.4 5.4 0 0 1 10.8 0V21"/>
-    <path d="M4.4 21h15.2"/>
-    <path d="M9.2 11.4h5.6"/>
-    <path d="M9.6 15.6h4.8"/>
+
+  <symbol id="gf-post" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="57.5" rx="23" ry="3" fill="#14312B" opacity=".15"/>
+    <path d="M47 56V38a6 6 0 0 1 12 0v18z" fill="#C8102E" stroke="#14312B" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="49.5" y="41.4" width="7" height="2.4" rx="1.2" fill="#14312B"/>
+    <path d="M47.4 48.5h11.2" stroke="#14312B" stroke-width="1.5" fill="none"/>
+    <rect x="8" y="18" width="36" height="38" rx="2" fill="#C8102E" stroke="#14312B" stroke-width="2"/>
+    <path d="M4.5 19 26 6l21.5 13z" fill="#E4574B" stroke="#14312B" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="11" y="22" width="30" height="9" rx="2" fill="#F7F1E3" stroke="#14312B" stroke-width="1.8"/>
+    <rect x="21" y="24" width="10" height="5.4" rx="1" fill="none" stroke="#C8102E" stroke-width="1.6"/>
+    <path d="m21.4 24.4 4.6 3 4.6-3" fill="none" stroke="#C8102E" stroke-width="1.6"/>
+    <rect x="11.5" y="35" width="12" height="11" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="1.8"/>
+    <path d="M17.5 35v11M11.5 40.5h12" stroke="#14312B" stroke-width="1.2" fill="none"/>
+    <rect x="28" y="35" width="12" height="21" rx="1.5" fill="#F0B429" stroke="#14312B" stroke-width="1.8"/>
+    <circle cx="37" cy="46" r="1.2" fill="#14312B"/>
   </symbol>
-  <symbol id="gf-shop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3.4 8.2h17.2l-1.6 10.1a2 2 0 0 1-2 1.7H7a2 2 0 0 1-2-1.7L3.4 8.2Z"/>
-    <path d="m8.6 8.2 2.5-4.6M15.4 8.2l-2.5-4.6"/>
-    <path d="M9.6 12.1v4M14.4 12.1v4"/>
+
+  <symbol id="gf-shop" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="57.5" rx="23" ry="3" fill="#14312B" opacity=".15"/>
+    <rect x="7" y="21" width="50" height="35" rx="2" fill="#F7F1E3" stroke="#14312B" stroke-width="2"/>
+    <rect x="11" y="29" width="26" height="18" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="2"/>
+    <circle cx="17.5" cy="40" r="3" fill="#E4574B"/>
+    <circle cx="24" cy="40.5" r="3.4" fill="#F0B429"/>
+    <circle cx="30.5" cy="40" r="3" fill="#4FA37A"/>
+    <path d="M11 44.5h26" stroke="#14312B" stroke-width="1.4" fill="none"/>
+    <rect x="41" y="34" width="12" height="22" rx="1.5" fill="#2E7D5B" stroke="#14312B" stroke-width="2"/>
+    <circle cx="50" cy="45" r="1.2" fill="#F0B429"/>
+    <path d="M6 15h8.7v7q-4.35 4.5-8.7 0z" fill="#2E7D5B"/>
+    <path d="M14.7 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M23.4 15h8.7v7q-4.35 4.5-8.7 0z" fill="#2E7D5B"/>
+    <path d="M32.1 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M40.8 15h8.7v7q-4.35 4.5-8.7 0z" fill="#2E7D5B"/>
+    <path d="M49.5 15h8.7v7q-4.35 4.5-8.7 0z" fill="#F7F1E3"/>
+    <path d="M6 15h52.2v7q-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0-4.35 4.5-8.7 0z"
+          fill="none" stroke="#14312B" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="17" y="2" width="30" height="12" rx="2.5" fill="#2E7D5B" stroke="#14312B" stroke-width="2"/>
+    <path d="M25.6 6.8h12.8l-1.5 5.4a1.4 1.4 0 0 1-1.35 1h-7.1a1.4 1.4 0 0 1-1.35-1z" fill="#F7F1E3"/>
+    <path d="m28.9 6.8 1.7-2.4M35.1 6.8l-1.7-2.4" stroke="#F7F1E3" stroke-width="1.4" fill="none" stroke-linecap="round"/>
   </symbol>
-  <symbol id="gf-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="4" y="3.6" width="16" height="13.2" rx="2.6"/>
-    <path d="M4 10.2h16"/>
-    <path d="M7.2 16.8v2.6M16.8 16.8v2.6"/>
-    <circle cx="8.2" cy="13.6" r=".9" fill="currentColor" stroke="none"/>
-    <circle cx="15.8" cy="13.6" r=".9" fill="currentColor" stroke="none"/>
+
+  <symbol id="gf-bus" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="57.5" rx="23" ry="3" fill="#14312B" opacity=".15"/>
+    <rect x="11" y="24" width="42" height="31" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="2"/>
+    <path d="M25.5 24v31M39 24v31" stroke="#14312B" stroke-width="1.4" fill="none"/>
+    <rect x="14" y="27.5" width="8.5" height="12" rx="1" fill="#F0B429" stroke="#14312B" stroke-width="1.4"/>
+    <path d="M15.8 31h4.9M15.8 33.6h4.9M15.8 36.2h4.9" stroke="#14312B" stroke-width="1" fill="none"/>
+    <rect x="28" y="42" width="23" height="3.6" rx="1.4" fill="#8C5A3C" stroke="#14312B" stroke-width="1.5"/>
+    <path d="M30 45.6v7.5M49 45.6v7.5" stroke="#14312B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <rect x="7.5" y="17.5" width="49" height="7" rx="2.5" fill="#6F7B78" stroke="#14312B" stroke-width="2"/>
+    <rect x="18" y="3" width="28" height="13" rx="2.5" fill="#C8102E" stroke="#14312B" stroke-width="2"/>
+    <rect x="26" y="6" width="12" height="8.4" rx="1.6" fill="#F7F1E3"/>
+    <path d="M26 9.9h12" stroke="#C8102E" stroke-width="1.2" fill="none"/>
+    <circle cx="28.7" cy="12.2" r="1" fill="#C8102E"/>
+    <circle cx="35.3" cy="12.2" r="1" fill="#C8102E"/>
   </symbol>
-  <symbol id="gf-gp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3.2 20 6v6.1c0 4.4-3.2 7.5-8 8.7-4.8-1.2-8-4.3-8-8.7V6l8-2.8Z"/>
-    <path d="M12 8.4v6.2M8.9 11.5h6.2"/>
+
+  <symbol id="gf-gp" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="57.5" rx="23" ry="3" fill="#14312B" opacity=".15"/>
+    <rect x="9" y="19" width="46" height="37" rx="2" fill="#B5563E" stroke="#14312B" stroke-width="2"/>
+    <path d="M9 29h46M9 37h46M9 45h46" stroke="#98432F" stroke-width="1.3" fill="none"/>
+    <rect x="5.5" y="14" width="53" height="7.5" rx="2" fill="#98432F" stroke="#14312B" stroke-width="2"/>
+    <rect x="13" y="26" width="12" height="12" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="2"/>
+    <path d="M19 26v12M13 32h12" stroke="#14312B" stroke-width="1.2" fill="none"/>
+    <rect x="39" y="26" width="12" height="12" rx="1.5" fill="#BFE0EC" stroke="#14312B" stroke-width="2"/>
+    <path d="M45 26v12M39 32h12" stroke="#14312B" stroke-width="1.2" fill="none"/>
+    <rect x="25" y="36" width="14" height="20" rx="1.5" fill="#3A7CA5" stroke="#14312B" stroke-width="2"/>
+    <path d="M32 36v20" stroke="#14312B" stroke-width="1.3" fill="none"/>
+    <circle cx="29.8" cy="46" r="1.1" fill="#F7F1E3"/>
+    <circle cx="34.2" cy="46" r="1.1" fill="#F7F1E3"/>
+    <rect x="25.5" y="2" width="13" height="13" rx="2.5" fill="#F7F1E3" stroke="#14312B" stroke-width="2"/>
+    <path d="M32 5.2v6.6M28.7 8.5h6.6" stroke="#C8102E" stroke-width="2.8" stroke-linecap="round" fill="none"/>
   </symbol>
+
 </svg>
 
 <header class="banner">
@@ -987,7 +1060,7 @@ html.hc .site-foot a{color:#FFD400}
         '</div>';
 
       var marker = L.marker(place.coords, {
-        icon: L.divIcon({ className: 'pin', html: html, iconSize: [48, 48], iconAnchor: [24, 24] }),
+        icon: L.divIcon({ className: 'pin', html: html, iconSize: [56, 56], iconAnchor: [28, 28] }),
         keyboard: true,
         title: place.name,
         alt: 'Show online guides for ' + place.name,
