@@ -181,8 +181,11 @@ html.hc .section-head p{color:#fff}
 }
 html.hc .map-frame{border-color:#FFD400}
 
+/* Deliberately px/vh, not rem. Text size should scale text, not the
+   size of the map viewport — and a map that grows to 830px tall at
+   "Largest" pushes everything else off the screen. */
 #map{
-  height:clamp(24rem,58vh,32rem);
+  height:clamp(360px,55vh,560px);
   background:#DDD9CC;
 }
 html.hc .leaflet-tile-pane{filter:grayscale(1) contrast(1.35) brightness(.82)}
@@ -809,6 +812,20 @@ html.hc .site-foot a{color:#FFD400}
   var contrastButton = doc.getElementById('contrast-toggle');
 
   /**
+   * Set by initMap once the map exists. Changing text size can change
+   * the grid breakpoint and therefore the map's width, which Leaflet
+   * has no way of noticing on its own.
+   * @type {?function(): void}
+   */
+  var refreshMap = null;
+
+  /** Re-measure after the browser has finished laying out the new type size. */
+  function scheduleMapRefresh() {
+    if (typeof refreshMap !== 'function') { return; }
+    win.requestAnimationFrame(function () { win.requestAnimationFrame(refreshMap); });
+  }
+
+  /**
    * @param {string} size
    * @param {boolean} shouldAnnounce
    */
@@ -820,6 +837,7 @@ html.hc .site-foot a{color:#FFD400}
       btn.setAttribute('aria-pressed', String(btn.getAttribute('data-size') === safe));
     });
     store.setItem(KEY_SIZE, safe);
+    scheduleMapRefresh();
     if (shouldAnnounce) { announce('Text size set to ' + SIZE_LABELS[safe] + '.'); }
   }
 
@@ -1037,7 +1055,11 @@ html.hc .site-foot a{color:#FFD400}
     var map = L.map('map', {
       scrollWheelZoom: false,   // stops the page-scroll trap
       zoomControl: true,
-      keyboard: true
+      keyboard: true,
+      // A hard stop at the edge. The default (0) lets the map be dragged
+      // past the limit and then springs it back, which reads as the page
+      // being broken rather than as a boundary.
+      maxBoundsViscosity: 1.0
     });
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1076,10 +1098,59 @@ html.hc .site-foot a{color:#FFD400}
       markers.push(marker);
     });
 
-    // Frame all five, then fence the map in so nobody gets lost.
+    // Frame all five places.
     var group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds(), { padding: [56, 56], maxZoom: 17 });
-    map.setMaxBounds(group.getBounds().pad(1.4));
+    var homeBounds = group.getBounds();
+
+    map.fitBounds(homeBounds, { padding: [56, 56], maxZoom: 17 });
+
+    /**
+     * Keep the map roughly over Hawksworth without ever fencing the
+     * user into an area smaller than what they can already see — that
+     * is what produced the rubber-band snap-back at larger text sizes.
+     * @returns {L.LatLngBounds}
+     */
+    function allowedBounds() {
+      var allowed = homeBounds.pad(1.2);
+      var visible = map.getBounds();
+      // If the viewport is wider than the ring, the viewport wins.
+      return allowed.contains(visible) ? allowed : visible.pad(0.3);
+    }
+
+    /** Release the old fence before measuring, or it constrains its own input. */
+    function applyBounds() {
+      map.setMaxBounds(null);
+      map.setMaxBounds(allowedBounds());
+    }
+
+    applyBounds();
+
+    // Zooming out also makes the visible area larger than the ring.
+    map.on('zoomend', applyBounds);
+
+    /**
+     * Leaflet caches its container size, so it must be told when the
+     * container changes — which happens on window resize AND whenever
+     * the text size flips the layout to a different number of columns.
+     */
+    function refresh() {
+      map.invalidateSize({ animate: false, pan: false });
+      applyBounds();
+    }
+
+    refreshMap = refresh;
+
+    var resizeTimer = null;
+    function debouncedRefresh() {
+      if (resizeTimer) { win.clearTimeout(resizeTimer); }
+      resizeTimer = win.setTimeout(refresh, 120);
+    }
+
+    if (typeof win.ResizeObserver === 'function') {
+      new win.ResizeObserver(debouncedRefresh).observe(doc.getElementById('map'));
+    } else {
+      win.addEventListener('resize', debouncedRefresh);
+    }
   }
 
   initMap();
