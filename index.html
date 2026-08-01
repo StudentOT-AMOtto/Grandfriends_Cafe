@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Grandfriends Café — getting online in Hawksworth Wood</title>
-<meta name="description" content="Friendly, plain-English guides to using the internet for everyday things in Hawksworth Wood, Leeds. Pick a place on the map to see the guides for it.">
+<title>Grandfriends Café Digital Hub — Hawksworth, Leeds</title>
+<meta name="description" content="Plain-English guides to the everyday things that have moved online, made for Grandfriends Café at BEAT in Hawksworth, Leeds. Pick a landmark on the map to see the guides for it.">
 <meta name="theme-color" content="#14312B">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2314312B' d='M0 0h24v24H0z'/%3E%3Cpath fill='none' stroke='%23F1EEE3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17'/%3E%3C/svg%3E">
@@ -491,11 +491,12 @@ html.hc .site-foot a{color:#FFD400}
 
 <header class="banner">
   <div class="wrap">
-    <p class="banner__eyebrow">Hawksworth Wood, Leeds</p>
+    <p class="banner__eyebrow">Digital hub · BEAT, Hawksworth</p>
     <h1>Grandfriends Café</h1>
     <p class="banner__lede">
-      A friendly hand with the online side of everyday life — your prescriptions,
-      your parcels, your bus times. Nothing here assumes you already know how.
+      A great deal of everyday life has quietly moved onto a screen. These guides
+      go through it a small step at a time, alongside a grandfriend who has the
+      time to show you. Thursdays, 4–6pm at BEAT.
     </p>
 
     <div class="settings" role="group" aria-label="Page settings">
@@ -523,20 +524,25 @@ html.hc .site-foot a{color:#FFD400}
   <div class="wrap">
 
     <div class="section-head">
-      <h2>Five places, and what you can do online at each</h2>
+      <h2>Five landmarks, five parts of life that moved online</h2>
       <p>
-        Choose a place on the map, or use the list beside it — both open the same guides.
-        There are five places: the café, the post office, the supermarket, the bus stop
-        and the doctor's surgery.
+        Each place on this map stands for a set of things you once did by walking in
+        through a door. Pick the one you want to work on today — the café for devices
+        and staying safe, the post office for keeping in touch, the supermarket for
+        food, the bus stop for getting about, the surgery for your health. The map and
+        the list open the same guides.
       </p>
     </div>
 
     <noscript>
       <p class="draft-note" style="max-width:none">
-        The map needs JavaScript switched on. The five places are:
-        Grandfriends Café, Hawksworth Estate Post Office (60A Lea Farm Road),
-        Co-op Food on Broadway, the Vesper Road bus stop, and Vesper Road Surgery
-        (43 Vesper Road). Call us on 0113 000 0000 and we will read any guide to you.
+        The map needs JavaScript switched on. The five landmarks are:
+        Grandfriends Café at BEAT, Lea Farm Mount — devices, getting online and staying safe;
+        Hawksworth Estate Post Office, 60A Lea Farm Road — keeping in touch;
+        Co-op Food, Broadway — food shopping and cooking;
+        the Vesper Road bus stop — travelling and getting about;
+        and Vesper Road Surgery, 43 Vesper Road — health and wellbeing.
+        Come along on a Thursday and we will go through any of them with you.
       </p>
     </noscript>
 
@@ -561,14 +567,21 @@ html.hc .site-foot a{color:#FFD400}
 
 <footer class="site-foot">
   <div class="wrap">
-    <h2>Would you rather someone showed you?</h2>
+    <h2>Come along on a Thursday</h2>
     <p>
-      Bring your phone, tablet or letters to the café and someone will sit with you.
-      No appointment, no charge, and no question is too small.
+      Grandfriends Café runs at BEAT on Lea Farm Mount, Thursdays from 4 to 6pm.
+      Bring your phone or tablet, or borrow one of ours. No appointment, no charge,
+      and no question is too small.
     </p>
     <p>
-      Phone <a href="tel:+441130000000">0113 000 0000</a> ·
-      Hawksworth Wood, Leeds LS5
+      BEAT — Belonging, Empowering and Thriving ·
+      Lea Farm Mount, Leeds LS5 3PX ·
+      <a href="tel:+441132174651">0113 217 4651</a>
+    </p>
+    <p style="font-size:.95rem;margin-top:1.25rem">
+      <strong>Volunteers:</strong> these guides pair with the Grandfriends Café resource
+      pack. Each list of steps is already broken into chunks — take one chunk, tell them
+      what you are about to do, show them, then hand the device back and let them do it.
     </p>
     <p style="font-size:.9rem;margin-top:1.25rem">
       Map data © <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors.
@@ -587,7 +600,7 @@ html.hc .site-foot a{color:#FFD400}
   <div class="dialog__body" id="dialog-body"></div>
   <div class="dialog__foot">
     <button type="button" class="close" data-close>Close</button>
-    <p>Stuck? Ring 0113 000 0000 and we will talk it through.</p>
+    <p>Take one step at a time — you do not have to do the whole list today.</p>
   </div>
 </dialog>
 
@@ -607,111 +620,287 @@ html.hc .site-foot a{color:#FFD400}
      contents are all derived from this array, so adding a
      landmark means adding one object here and nothing else.
 
-     NOTE FOR TOM: the two coordinates marked APPROX were read
-     off your screenshot. Replace them with exact values from
-     openstreetmap.org (right-click → "Show address") before
-     going live.
+     REMAINING TO CONFIRM: the bus stop coordinate below is marked
+     APPROX and was read off a screenshot. Replace it with an exact
+     value from openstreetmap.org (right-click → "Show address").
+     The café now uses BEAT's real location on Lea Farm Mount.
      ========================================================== */
   /** @type {ReadonlyArray<Object>} */
   var PLACES = Object.freeze([
     {
       id: 'cafe',
       number: 1,
-      name: 'Grandfriends Café',
-      kind: 'Café — where we meet',
-      address: 'Hawksworth Wood, Leeds LS5',
-      coords: [53.83110937521422, -1.6137021264597131],           // APPROX — confirm
+      name: 'Grandfriends Café at BEAT',
+      kind: 'Devices, getting online, and staying safe',
+      address: 'BEAT, Lea Farm Mount, Leeds LS5 3PX',
+      coords: [53.830964, -1.613559],
       icon: 'gf-cafe',
       guides: [
-        { title: 'Using the café wi-fi', draft: true,
-          summary: 'How to get your phone or tablet onto our free internet, once, so it remembers next time.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'What to bring to a help session', draft: true,
-          summary: 'The few things that make it much quicker for us to sort a problem out with you.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Spotting a scam message', draft: true,
-          summary: 'The signs that a text or email is not really from your bank, the DVLA or the Post Office.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+        { title: 'Finding your way around your device',
+          summary: 'The buttons, the home screen and the settings — what everything else is built on.',
+          steps: [
+            'Switching on, unlocking, and switching off again',
+            'The home screen: what the icons are, and opening one',
+            'Going back, and closing something you have finished with',
+            'Making the text bigger and the screen brighter in Settings',
+            'Turning the sound up, down, and off'
+          ] },
+        { title: 'Getting online: Wi-Fi and mobile data',
+          summary: 'The difference between the two, and how to join a network at home or here at BEAT.',
+          steps: [
+            'What Wi-Fi is, and what mobile data is',
+            'Opening the Wi-Fi settings on your device',
+            'Picking the right network out of the list',
+            'Typing the password in once — your device remembers it after that',
+            'Checking you are connected before you start'
+          ] },
+        { title: 'Downloading an app',
+          summary: 'Getting something new onto your phone or tablet from the App Store or Play Store.',
+          steps: [
+            'Finding the store app that is already on your device',
+            'Searching for the app by name',
+            'Checking it is the right one before you tap Install',
+            'Waiting for it to finish, then finding it on your home screen',
+            'Signing in or setting up an account if it asks'
+          ] },
+        { title: 'Passwords you can actually remember',
+          summary: 'Strong enough to be safe, simple enough that you are not locked out.',
+          steps: [
+            'Why one password used everywhere is the risky bit',
+            'Building a password out of three random words',
+            'Where it is sensible to write passwords down',
+            'Letting your phone remember a password for you',
+            'What to do when you are locked out of something'
+          ] },
+        { title: 'Spotting a scam',
+          summary: 'The signs a message is not really from your bank, the NHS, the DVLA or the Post Office.',
+          steps: [
+            'Real organisations do not rush you or threaten you',
+            'Checking who a message has actually come from',
+            'Never tapping a link in a message you were not expecting',
+            'Ringing the organisation back on a number you already had',
+            'What to do if you think you have already been caught out'
+          ] }
       ]
     },
     {
       id: 'post-office',
       number: 2,
       name: 'Hawksworth Estate Post Office',
-      kind: 'Post office — inside Lea Farm Minimarket',
+      kind: 'Keeping in touch with people',
       address: '60A Lea Farm Road, Leeds LS5 3PH',
-      coords: [53.8293717069728, -1.6125547462365615],
+      coords: [53.829318, -1.612560],
       icon: 'gf-post',
       guides: [
-        { title: 'Sending back something you bought online', draft: true,
-          summary: 'How to get the return label on your phone, and what to show at the counter.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Tracking a parcel', draft: true,
-          summary: 'Where to type the tracking number, and what the different messages actually mean.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Checking the opening hours before you set off', draft: true,
-          summary: 'The counter hours are not always the same as the shop hours. Here is how to check.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+        { title: 'Text messages',
+          summary: 'Reading what arrives on your phone, and answering it.',
+          steps: [
+            'Opening Messages and finding a conversation',
+            'Reading a message and replying to it',
+            'Starting a new message to somebody in your contacts',
+            'Adding somebody new to your contacts'
+          ] },
+        { title: 'WhatsApp: messages, photos and videos',
+          summary: 'Free messaging over the internet — the one most families use for group chats.',
+          steps: [
+            'Opening a chat with one person',
+            'Sending a message',
+            'Sending a photo from your camera roll',
+            'Saving a photo somebody has sent you',
+            'Finding your way around a group chat'
+          ] },
+        { title: 'Video calling',
+          summary: 'Seeing the person you are talking to, on WhatsApp or FaceTime.',
+          steps: [
+            'Checking your camera and microphone work first',
+            'Starting a video call from inside a chat',
+            'Answering a call somebody else has started',
+            'Turning your camera or microphone off part-way through',
+            'Ending the call'
+          ] },
+        { title: 'Email',
+          summary: 'Writing, sending and reading email, and attaching a photo or a document.',
+          steps: [
+            'Opening your inbox and reading a message',
+            'Replying to something you have received',
+            'Writing a new one: who it goes to, the subject, the message',
+            'Attaching a photo or a document',
+            'Where emails hide when you cannot find them'
+          ] },
+        { title: 'Facebook and Instagram',
+          summary: 'Following family, friends and local groups without getting lost in it.',
+          steps: [
+            'What a feed is, and why things appear in it',
+            'Finding and following somebody you know',
+            'Liking or commenting on a post',
+            'Choosing who can see what you put up',
+            'Muting or unfollowing something you would rather not see'
+          ] }
       ]
     },
     {
       id: 'supermarket',
       number: 3,
       name: 'Co-op Food, Broadway',
-      kind: 'Supermarket',
+      kind: 'Food shopping, planning and cooking',
       address: 'Broadway, Hawksworth Wood, Leeds LS5 3PR',
-      coords: [53.8282687641303, -1.6165503943314083],
+      coords: [53.828246, -1.616565],
       icon: 'gf-shop',
       guides: [
-        { title: 'Ordering your shopping to be delivered', draft: true,
-          summary: 'Choosing a shop, filling a basket and picking a delivery time — from start to finish.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Using the self-service till', draft: true,
-          summary: 'What each screen is asking you, and what to do when it says "unexpected item".',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Your membership card on your phone', draft: true,
-          summary: 'Getting the barcode up on screen so you still get your points without the plastic card.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+        { title: 'Getting a supermarket app onto your device',
+          summary: 'Choosing one and installing it — the first step before anything else.',
+          steps: [
+            'Deciding which supermarket or delivery service suits you',
+            'Finding it in the app store',
+            'Installing it',
+            'Opening it for the first time'
+          ] },
+        { title: 'Setting up your account',
+          summary: 'The one-off bit of form-filling that everything afterwards depends on.',
+          steps: [
+            'Entering your name and email address',
+            'Choosing a password, and writing it somewhere safe',
+            'Adding your delivery address',
+            'Adding a card, or choosing to pay at the door instead'
+          ] },
+        { title: 'Booking a delivery slot',
+          summary: 'Picking when your shopping arrives, and knowing when you can still change it.',
+          steps: [
+            'Finding the delivery or collection section',
+            'Reading which days and times are free',
+            'Choosing a slot that suits you',
+            'Noting the cut-off time for changing the order'
+          ] },
+        { title: 'Finding what you want in the virtual aisle',
+          summary: 'Searching rather than wandering — much quicker once you get the hang of it.',
+          steps: [
+            'Searching by name instead of browsing the categories',
+            'Adding an item to your basket',
+            'Changing the quantity, or taking something out again',
+            'Checking the basket total before you place the order',
+            'Saving a favourites list so next week is faster'
+          ] },
+        { title: 'A shopping list on your phone',
+          summary: 'The list is always with you, and you can tick things off as you go round.',
+          steps: [
+            'Opening the notes or list app already on your device',
+            'Adding items one at a time',
+            'Ticking things off while you shop',
+            'Sharing the list with somebody else'
+          ] },
+        { title: 'Goblin Tools: a recipe from what you already have',
+          summary: 'Type in what is in the fridge and the cupboard, and it suggests something to make.',
+          steps: [
+            'Opening the Chef tool in a web browser',
+            'Listing the ingredients you have in',
+            'Saying how much cooking you feel up to today',
+            'Reading the suggestion, and asking for another if it does not appeal'
+          ] }
       ]
     },
     {
       id: 'bus-stop',
       number: 4,
       name: 'Vesper Road bus stop',
-      kind: 'Bus stop — towards the city centre',
+      kind: 'Travelling and getting about',
       address: 'Vesper Road, Hawksworth Wood, Leeds LS5',
-      coords: [53.82684757939641, -1.6118515298628142],          // APPROX — confirm
+      coords: [53.82715, -1.61165],          // APPROX — confirm
       icon: 'gf-bus',
       guides: [
-        { title: 'Checking when the next bus is really due', draft: true,
+        { title: 'When is the next bus?',
           summary: 'Live times on your phone, so you are not stood in the rain guessing.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Planning a journey across Leeds', draft: true,
-          summary: 'Typing in where you are and where you want to be, and reading the answer.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Renewing your older person\u2019s bus pass', draft: true,
-          summary: 'What the online form asks for, and what to do if you would rather do it on paper.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+          steps: [
+            'Opening the First Bus app, or the West Yorkshire Metro site',
+            'Finding your stop by name or on the map',
+            'Reading the live time against the timetabled time',
+            'Saving your usual stop so it is there next time'
+          ] },
+        { title: 'Buying a ticket, or using your pass',
+          summary: 'Tickets on the phone, and what to do with an MCard.',
+          steps: [
+            'Buying a single or a day ticket in the app',
+            'Where the ticket lives once you have bought it',
+            'Activating it before you board, not after',
+            'Topping up an MCard',
+            'Using your older person\u2019s bus pass alongside all this'
+          ] },
+        { title: 'Trains',
+          summary: 'Looking up a journey, and getting hold of the ticket.',
+          steps: [
+            'Searching a journey on Trainline or the train company\u2019s own site',
+            'Reading the results: time, changes, price',
+            'Choosing a paper ticket, an e-ticket, or collection at the station',
+            'Finding your e-ticket again when you are stood on the platform'
+          ] },
+        { title: 'Google Maps for finding your way',
+          summary: 'Getting somewhere new on foot, by bus or by car.',
+          steps: [
+            'Searching for a place by name',
+            'Choosing walking, driving or public transport',
+            'Starting the directions and following them',
+            'Dropping a pin so you can find your way back'
+          ] },
+        { title: 'Checking a place is accessible before you set off',
+          summary: 'Step-free access, seating and toilets — worth knowing before the journey, not after.',
+          steps: [
+            'Turning on accessibility information in Google Maps',
+            'Reading what the symbols actually mean',
+            'Looking a venue up on AccessAble for more detail',
+            'Using the Flush app to find a public toilet nearby'
+          ] },
+        { title: 'Checking the weather first',
+          summary: 'Two minutes that saves getting caught out.',
+          steps: [
+            'Opening the weather app already on your phone',
+            'Reading the hour-by-hour forecast',
+            'Adding Leeds so it opens on the right place',
+            'What the rain percentage actually means'
+          ] },
+        { title: 'Looking up flights',
+          summary: 'Comparing prices without committing to anything.',
+          steps: [
+            'Searching a route and dates on Skyscanner or Google Flights',
+            'Reading the results, and what the price does and does not include',
+            'Setting a price alert instead of booking straight away',
+            'Checking the airline\u2019s own site before you pay'
+          ] }
       ]
     },
     {
       id: 'gp-surgery',
       number: 5,
       name: 'Vesper Road Surgery',
-      kind: 'GP surgery',
+      kind: 'Health and wellbeing',
       address: '43 Vesper Road, Leeds LS5 3QT',
-      coords: [53.826691065739276, -1.6124496517459648],
+      coords: [53.826690, -1.612518],
       icon: 'gf-gp',
       guides: [
-        { title: 'Ordering a repeat prescription', draft: true,
+        { title: 'Booking, changing or cancelling an appointment',
           summary: 'Doing it from your armchair instead of ringing at eight in the morning.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Setting up the NHS App', draft: true,
-          summary: 'Proving who you are the first time, which is the part most people get stuck on.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.', 'Placeholder — write the step here.'] },
-        { title: 'Joining an appointment by video', draft: true,
-          summary: 'What the link in the text message does, and how to check your camera works first.',
-          steps: ['Placeholder — write the step here.', 'Placeholder — write the step here.'] }
+          steps: [
+            'Getting set up on the NHS App, or your surgery\u2019s own online system',
+            'Proving who you are the first time — the part most people get stuck on',
+            'Finding the appointments section',
+            'Choosing a time and confirming it',
+            'Cancelling or moving one you have already booked'
+          ] },
+        { title: 'Ordering your repeat medication',
+          summary: 'The request goes in when it suits you, not when the phone line is open.',
+          steps: [
+            'Finding the prescriptions section',
+            'Choosing which items you need this time',
+            'Sending the request off',
+            'Checking it has been approved',
+            'Choosing which pharmacy it goes to'
+          ] },
+        { title: 'Health information you can trust',
+          summary: 'Knowing which websites are worth reading, and which are selling you something.',
+          steps: [
+            'Starting at the NHS website rather than a search engine',
+            'Working out who is behind a website, and why',
+            'Being wary of anything that wants to sell you a cure',
+            'Taking what you have found to your GP or pharmacist rather than acting on it alone'
+          ] }
       ]
     }
   ]);
