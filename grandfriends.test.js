@@ -115,6 +115,40 @@ describe('findPlace', () => {
   });
 });
 
+describe('pinScale', () => {
+  const GF = boot();
+
+  test('stays flat at the base size at and below the growth threshold', () => {
+    for (let z = GF.MAP_MIN_ZOOM; z <= GF.PIN_GROW_FROM; z += 1) {
+      expect(GF.pinScale(z)).toBe(1);
+    }
+  });
+
+  test('grows monotonically for each level in from the threshold', () => {
+    const ramp = [17, 18, 19].map(GF.pinScale);
+    expect(ramp[0]).toBeGreaterThan(1);
+    expect(ramp[1]).toBeGreaterThan(ramp[0]);
+    expect(ramp[2]).toBeGreaterThan(ramp[1]);
+  });
+
+  test('caps at fully zoomed in and never runs away', () => {
+    const max = GF.pinScale(GF.MAP_MAX_ZOOM);
+    expect(GF.pinScale(25)).toBe(max);
+    expect(max).toBeLessThan(2.5); // a 56px pin stays under ~140px
+  });
+
+  test('returns a safe 1 for junk input', () => {
+    [NaN, Infinity, null, undefined, 'sixteen'].forEach((z) => {
+      expect(GF.pinScale(z)).toBe(1);
+    });
+  });
+
+  test('snaps fractional zooms to the nearest level', () => {
+    expect(GF.pinScale(16.4)).toBe(GF.pinScale(16));
+    expect(GF.pinScale(16.6)).toBe(GF.pinScale(17));
+  });
+});
+
 describe('createStore', () => {
   const GF = boot();
 
