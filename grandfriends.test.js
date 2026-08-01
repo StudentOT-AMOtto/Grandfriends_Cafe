@@ -47,10 +47,23 @@ describe('data model', () => {
     });
   });
 
-  test('every place has at least one guide with a title', () => {
+  test('every guide has a title, a summary and real steps', () => {
     GF.PLACES.forEach((place) => {
       expect(place.guides.length).toBeGreaterThan(0);
-      place.guides.forEach((g) => expect(typeof g.title).toBe('string'));
+      place.guides.forEach((g) => {
+        expect(typeof g.title).toBe('string');
+        expect(g.title.length).toBeGreaterThan(0);
+        expect(typeof g.summary).toBe('string');
+        expect(Array.isArray(g.steps)).toBe(true);
+        expect(g.steps.length).toBeGreaterThan(0);
+        g.steps.forEach((step) => expect(step).not.toMatch(/Placeholder/i));
+      });
+    });
+  });
+
+  test('no guide is still flagged as a draft', () => {
+    GF.PLACES.forEach((place) => {
+      place.guides.forEach((g) => expect(g.draft).not.toBe(true));
     });
   });
 
@@ -189,8 +202,10 @@ describe('rendering and interaction', () => {
     boot();
     document.querySelector('[data-place="gp-surgery"]').click();
     expect(document.getElementById('dialog-title').textContent).toBe('Vesper Road Surgery');
+    expect(document.getElementById('dialog-where').textContent).toMatch(/Health and wellbeing/);
     expect(document.querySelectorAll('#dialog-body .guide')).toHaveLength(3);
-    expect(document.querySelector('.draft-note')).not.toBeNull();
+    // Content is written now, so the "still being drafted" notice should be gone.
+    expect(document.querySelector('.draft-note')).toBeNull();
   });
 
   test('text size buttons swap the class and keep aria-pressed truthful', () => {
