@@ -206,16 +206,27 @@ html.hc .map-note{color:#fff}
 /* Custom markers */
 .pin{background:none;border:0}
 /* Sized in px, not rem: map pins must stay in step with Leaflet's
-   iconSize, and would otherwise swamp the map at "Largest" text. */
+   iconSize, and would otherwise swamp the map at "Largest" text.
+   --pin-scale is driven by the zoom level; see setPinScale() below. */
+.leaflet-container{--pin-scale:1}
 .pin__body{
+  position:relative;
   width:56px;height:56px;
   display:flex;align-items:center;justify-content:center;
   background:var(--card);
   border:3px solid var(--ink);border-radius:14px;
   box-shadow:0 3px 0 rgba(20,49,43,.35);
   cursor:pointer;
+  transform:scale(var(--pin-scale));
+  transform-origin:50% 50%;
+  transition:transform .2s ease-out;
 }
 .pin__body svg{width:44px;height:44px}
+
+/* Outline the scaled body, not the fixed-size wrapper, or the focus
+   ring sits inside the pin at high zoom. */
+.pin.leaflet-marker-icon:focus-visible{outline:none}
+.pin:focus-visible .pin__body{outline:4px solid var(--ring);outline-offset:3px}
 .pin__num{
   position:absolute;top:-.55rem;right:-.55rem;
   min-width:1.5rem;height:1.5rem;padding:0 .3rem;
@@ -710,6 +721,15 @@ html.hc .site-foot a{color:#FFD400}
   var KEY_SIZE = 'gf.textSize';
   var KEY_HC = 'gf.highContrast';
 
+  /* Zoom behaviour. MAP_MAX_ZOOM is how far in the "+" button goes.
+     Pins hold their base size everywhere at or below PIN_GROW_FROM,
+     then grow one step per zoom level up to fully zoomed in. */
+  var MAP_MIN_ZOOM = 13;
+  var MAP_MAX_ZOOM = 19;
+  var PIN_GROW_STEPS = 3;                               // "three clicks from fully zoomed in"
+  var PIN_GROW_FROM = MAP_MAX_ZOOM - PIN_GROW_STEPS;    // = 16
+  var PIN_STEP = 1.22;                                  // growth factor per level
+
   /* ==========================================================
      TASK 2 — SAFE STORAGE
      localStorage throws in some private/sandboxed contexts.
@@ -762,6 +782,21 @@ html.hc .site-foot a{color:#FFD400}
    */
   function normaliseSize(value) {
     return SIZES.indexOf(value) === -1 ? SIZES[0] : value;
+  }
+
+  /**
+   * How much to enlarge the map pins at a given zoom level.
+   * Flat at 1 for every level at or below PIN_GROW_FROM, then one
+   * multiplicative step per level in, so the buildings read as
+   * buildings once you are close enough to see individual streets.
+   * @param {number} zoom
+   * @returns {number} a scale factor >= 1
+   */
+  function pinScale(zoom) {
+    if (typeof zoom !== 'number' || !isFinite(zoom)) { return 1; }
+    var steps = Math.round(zoom) - PIN_GROW_FROM;
+    steps = Math.min(Math.max(steps, 0), PIN_GROW_STEPS);
+    return Math.pow(PIN_STEP, steps);
   }
 
   /**
@@ -1063,8 +1098,8 @@ html.hc .site-foot a{color:#FFD400}
     });
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      minZoom: 13,
+      maxZoom: MAP_MAX_ZOOM,
+      minZoom: MAP_MIN_ZOOM,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
@@ -1129,6 +1164,21 @@ html.hc .site-foot a{color:#FFD400}
     map.on('zoomend', applyBounds);
 
     /**
+     * Pins grow as you zoom past PIN_GROW_FROM. Written to a CSS
+     * variable rather than rebuilding each icon, so Leaflet's own
+     * positioning maths is untouched and the growth animates.
+     * @param {number} zoom
+     */
+    var mapPane = map.getContainer();
+    function setPinScale(zoom) {
+      mapPane.style.setProperty('--pin-scale', pinScale(zoom).toFixed(3));
+    }
+
+    setPinScale(map.getZoom());
+    map.on('zoomanim', function (event) { setPinScale(event.zoom); });  // during the animation
+    map.on('zoomend', function () { setPinScale(map.getZoom()); });     // authoritative on settle
+
+    /**
      * Leaflet caches its container size, so it must be told when the
      * container changes — which happens on window resize AND whenever
      * the text size flips the layout to a different number of columns.
@@ -1157,7 +1207,9 @@ html.hc .site-foot a{color:#FFD400}
 
   /* Exposed for unit tests only — see tests/grandfriends.test.js */
   win.GF = { PLACES: PLACES, SIZES: SIZES, createStore: createStore,
-             clampIndex: clampIndex, normaliseSize: normaliseSize, findPlace: findPlace };
+             clampIndex: clampIndex, normaliseSize: normaliseSize, findPlace: findPlace,
+             pinScale: pinScale, PIN_GROW_FROM: PIN_GROW_FROM,
+             MAP_MAX_ZOOM: MAP_MAX_ZOOM, MAP_MIN_ZOOM: MAP_MIN_ZOOM };
 
 }(window, document));
 </script>
