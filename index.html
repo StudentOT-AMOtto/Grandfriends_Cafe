@@ -151,8 +151,8 @@ a:hover{text-decoration-thickness:.2em}
 html.hc .win{border-color:#FFD400}
 
 .win__bar{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding:.4rem .55rem;
+  display:flex;align-items:center;gap:1rem;
+  padding:.4rem .7rem;
   background:linear-gradient(90deg,var(--pink) 0%,var(--lilac) 52%,var(--mint) 100%);
   border-bottom:3px solid var(--ink);
   font-family:"Space Mono",monospace;font-weight:700;
@@ -160,14 +160,6 @@ html.hc .win{border-color:#FFD400}
 }
 html.hc .win__bar{background:#000;border-bottom-color:#FFD400;color:#FFD400}
 
-.win__dots{display:flex;gap:.3rem;flex:none}
-.win__dot{
-  width:1.15rem;height:1.15rem;
-  display:grid;place-items:center;
-  background:var(--chrome);border:2px solid var(--ink);
-  font-size:.62rem;line-height:1;
-}
-html.hc .win__dot{border-color:#FFD400;color:#FFD400}
 
 /* The black monitor panel used in the header and footer. */
 .screen{
@@ -568,9 +560,6 @@ html.hc .dialog__foot p{color:#fff}
     <div class="win">
       <div class="win__bar">
         <span>grandfriends_cafe.exe</span>
-        <span class="win__dots" aria-hidden="true">
-          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
-        </span>
       </div>
       <div class="screen">
         <p class="banner__eyebrow">Digital hub · BEAT, Hawksworth</p>
@@ -587,9 +576,6 @@ html.hc .dialog__foot p{color:#fff}
     <div class="win settings-win">
       <div class="win__bar">
         <span>settings</span>
-        <span class="win__dots" aria-hidden="true">
-          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
-        </span>
       </div>
       <div class="settings" role="group" aria-label="Page settings">
       <div class="settings__group">
@@ -643,9 +629,6 @@ html.hc .dialog__foot p{color:#fff}
       <div class="win map-frame">
         <div class="win__bar">
           <span>hawksworth_wood.map</span>
-          <span class="win__dots" aria-hidden="true">
-            <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
-          </span>
         </div>
         <div id="map" role="application"
              aria-label="Map of Hawksworth Wood with five landmarks. Each landmark is also listed as a button below the map."></div>
@@ -669,9 +652,6 @@ html.hc .dialog__foot p{color:#fff}
     <div class="win">
       <div class="win__bar">
         <span>read_me.txt</span>
-        <span class="win__dots" aria-hidden="true">
-          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
-        </span>
       </div>
       <div class="screen">
     <h2>Come along on a Thursday</h2>
