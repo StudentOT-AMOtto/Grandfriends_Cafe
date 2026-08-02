@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Grandfriends Café Digital Hub — Hawksworth, Leeds</title>
 <meta name="description" content="Plain-English guides to the everyday things that have moved online, made for Grandfriends Café at BEAT in Hawksworth, Leeds. Pick a landmark on the map to see the guides for it.">
-<meta name="theme-color" content="#14312B">
+<meta name="theme-color" content="#C9B6E4">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2314312B' d='M0 0h24v24H0z'/%3E%3Cpath fill='none' stroke='%23F1EEE3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bitter:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Comfortaa:wght@600;700&family=Space+Mono:wght@400;700&display=swap">
 
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -20,47 +20,69 @@
 
 <style>
 /* ============================================================
-   1. DESIGN TOKENS
-   Body face is Atkinson Hyperlegible — designed by the Braille
-   Institute for low-vision readers, so 1/l/I and 0/O stay
-   distinguishable. Display face is Bitter, a sturdy slab with
-   enough weight to read at a glance.
+   1. DESIGN TOKENS — Win95 chrome over a vaporwave gradient,
+   pulled from the placement presentation.
+
+   Type is split three ways on purpose:
+     display  Comfortaa   — the rounded poster face from the slides
+     chrome   Space Mono  — window bars, buttons, small labels
+     body     Atkinson Hyperlegible — everything you actually read
+
+   Atkinson stays because it was drawn by the Braille Institute for
+   low-vision readers. A pixel or mono face would match the slides
+   more closely and would be the wrong call for this audience.
    ============================================================ */
 :root{
-  --ink:#14312B;          /* deep pine — primary text + header */
-  --ink-soft:#3D5952;     /* secondary text, still 7:1 on paper */
-  --paper:#F1EEE3;        /* warm oat page background */
+  --ink:#12121A;          /* near-black text */
+  --ink-soft:#463A55;
+  --screen:#0A0A12;       /* the black "monitor" panels */
+  --screen-head:#8ECBF5;  /* 11:1 on --screen */
+  --screen-body:#EDE7F5;  /* 15:1 on --screen */
+  --screen-mono:#FF8AD8;  /*  9:1 on --screen */
+
+  --paper:#FDF6EE;
   --card:#FFFFFF;
-  --line:#CFCAB8;
-  --pillar:#B3122C;       /* Royal Mail pillar-box red, 6.9:1 on white */
-  --brass:#E39A1F;
-  --ring:#14312B;         /* focus ring, re-declared on dark areas */
+  --chrome:#CBC9D8;       /* window grey */
+  --bevel-lt:#FFFFFF;
+  --bevel-dk:#585070;
 
-  --space:1rem;
-  --radius:14px;
+  --lilac:#C9B6E4;
+  --pink:#F7B9D6;
+  --mint:#A9E7DA;
+  --peach:#FBD5C0;
+  --accent:#C2277F;       /* 5.4:1 on white — safe for text */
+  --grid:rgba(226,72,190,.20);
+
+  --ring:#12121A;
+  --tap:3.25rem;
   --measure:64ch;
-  --tap:3.25rem;          /* minimum interactive height (>44px at all sizes) */
-
-  --shadow:0 2px 0 rgba(20,49,43,.14), 0 8px 22px -14px rgba(20,49,43,.5);
+  --hard:5px 5px 0 rgba(18,18,26,.5);
+  --hard-sm:3px 3px 0 rgba(18,18,26,.45);
 }
 
-/* Text size steps. Applied to <html> so every rem scales at once. */
 html.text-normal{font-size:18px}
 html.text-large{font-size:22px}
 html.text-largest{font-size:26px}
 
-/* High contrast: yellow-on-black, an RNIB-recommended pairing for
-   low vision. Borders thicken so shapes survive without colour. */
+/* High contrast strips every gradient back to flat black and yellow. */
 html.hc{
   --ink:#FFFFFF;
   --ink-soft:#F2F2F2;
+  --screen:#000000;
+  --screen-head:#FFD400;
+  --screen-body:#FFFFFF;
+  --screen-mono:#FFD400;
   --paper:#000000;
   --card:#000000;
-  --line:#FFD400;
-  --pillar:#FFD400;
-  --brass:#FFD400;
+  --chrome:#000000;
+  --bevel-lt:#FFD400;
+  --bevel-dk:#FFD400;
+  --lilac:#000;--pink:#000;--mint:#000;--peach:#000;
+  --accent:#FFD400;
+  --grid:transparent;
   --ring:#FFD400;
-  --shadow:none;
+  --hard:none;
+  --hard-sm:none;
 }
 
 /* ============================================================
@@ -70,28 +92,35 @@ html.hc{
 body,h1,h2,h3,p,ul,ol,li,figure,dialog{margin:0;padding:0}
 ul,ol{list-style:none}
 
+html{
+  background:linear-gradient(150deg,#CFC0EA 0%,#F3C3DA 32%,#FBD9C6 62%,#B3E4DA 100%) fixed;
+  min-height:100%;
+}
+html.hc{background:#000}
+
 body{
-  background:var(--paper);
   color:var(--ink);
   font-family:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
-  font-size:1rem;
-  line-height:1.65;
+  font-size:1rem;line-height:1.65;
   -webkit-text-size-adjust:100%;
+  /* The perspective grid from the slides. Behind content only —
+     never directly under body text. */
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0 58px,var(--grid) 58px 60px),
+    repeating-linear-gradient(90deg,transparent 0 58px,var(--grid) 58px 60px);
+  background-attachment:fixed;
 }
+html.hc body{background-image:none}
 
-h1,h2,h3{font-family:Bitter,Georgia,"Times New Roman",serif;line-height:1.2;font-weight:700}
-
+h1,h2,h3{font-family:Comfortaa,"Trebuchet MS",sans-serif;font-weight:700;line-height:1.22}
 p{max-width:var(--measure)}
 
 a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:.12em}
 a:hover{text-decoration-thickness:.2em}
 
-/* One focus style for the whole site. --ring is swapped on dark
-   surfaces so the indicator is never invisible. */
 :where(a,button,[tabindex],.leaflet-marker-icon):focus-visible{
   outline:4px solid var(--ring);
   outline-offset:3px;
-  border-radius:6px;
 }
 
 .visually-hidden{
@@ -101,70 +130,124 @@ a:hover{text-decoration-thickness:.2em}
 
 .skip-link{
   position:absolute;left:.5rem;top:-6rem;z-index:1200;
-  background:var(--brass);color:#14312B;font-weight:700;
-  padding:.85rem 1.25rem;border-radius:0 0 var(--radius) var(--radius);
+  background:var(--mint);color:var(--ink);
+  font-family:"Space Mono",monospace;font-weight:700;
+  padding:.85rem 1.25rem;border:3px solid var(--ink);
   transition:top .15s ease-out;
 }
-.skip-link:focus{top:0}
+.skip-link:focus{top:.5rem}
 
 .wrap{width:min(100% - 2rem,74rem);margin-inline:auto}
 
 /* ============================================================
-   3. HEADER
+   3. WINDOW CHROME
+   The one component the whole page is built from.
    ============================================================ */
-.banner{
-  --ring:#FFD86B;
-  background:var(--ink);
-  color:var(--paper);
-  padding-block:2.25rem 1.75rem;
-  border-bottom:6px solid var(--brass);
+.win{
+  background:var(--chrome);
+  border:3px solid var(--ink);
+  box-shadow:var(--hard);
 }
-html.hc .banner{background:#000;border-bottom-color:#FFD400}
+html.hc .win{border-color:#FFD400}
+
+.win__bar{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.4rem .55rem;
+  background:linear-gradient(90deg,var(--pink) 0%,var(--lilac) 52%,var(--mint) 100%);
+  border-bottom:3px solid var(--ink);
+  font-family:"Space Mono",monospace;font-weight:700;
+  font-size:.92rem;color:var(--ink);
+}
+html.hc .win__bar{background:#000;border-bottom-color:#FFD400;color:#FFD400}
+
+.win__dots{display:flex;gap:.3rem;flex:none}
+.win__dot{
+  width:1.15rem;height:1.15rem;
+  display:grid;place-items:center;
+  background:var(--chrome);border:2px solid var(--ink);
+  font-size:.62rem;line-height:1;
+}
+html.hc .win__dot{border-color:#FFD400;color:#FFD400}
+
+/* The black monitor panel used in the header and footer. */
+.screen{
+  --ring:#8ECBF5;
+  background:var(--screen);
+  color:var(--screen-body);
+  padding:2rem 1.5rem;
+}
+html.hc .screen{--ring:#FFD400}
+
+/* ============================================================
+   4. HEADER
+   ============================================================ */
+.banner{padding-block:1.75rem 1.5rem}
 
 .banner__eyebrow{
-  font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;
-  font-weight:700;color:var(--brass);margin-bottom:.4rem;
+  font-family:"Space Mono",monospace;font-weight:700;
+  font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--screen-mono);margin-bottom:.7rem;
 }
-html.hc .banner__eyebrow{color:#FFD400}
+.banner h1{
+  font-size:clamp(2.4rem,7vw,3.9rem);
+  color:var(--screen-head);
+  letter-spacing:-.01em;
+}
+.banner__lede{
+  margin-top:1rem;font-size:1.1rem;max-width:54ch;
+  color:var(--screen-body);
+}
+.banner__strip{
+  padding:.8rem 1rem;
+  background:var(--paper);border-top:3px solid var(--ink);
+  font-family:"Space Mono",monospace;font-weight:700;
+  font-size:1rem;color:var(--ink);
+}
+html.hc .banner__strip{border-top-color:#FFD400;color:#fff}
 
-.banner h1{font-size:clamp(2.1rem,6vw,3.1rem);letter-spacing:-.01em}
-.banner__lede{margin-top:.85rem;font-size:1.12rem;max-width:52ch;color:#E7E3D6}
-html.hc .banner__lede{color:#fff}
-
-/* Settings bar */
+/* Settings live in their own little window, as in the slide. */
+.settings-win{margin-top:1.25rem;max-width:44rem}
 .settings{
-  margin-top:1.75rem;padding-top:1.35rem;
-  border-top:2px solid rgba(241,238,227,.28);
-  display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;align-items:flex-start;
+  display:flex;flex-wrap:wrap;gap:1.25rem 2.25rem;align-items:flex-start;
+  padding:1.1rem;background:var(--paper);
 }
-html.hc .settings{border-top-color:#FFD400}
-
 .settings__group{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
-.settings__label{font-weight:700;font-size:1rem;margin-right:.25rem}
+.settings__label{
+  font-family:"Space Mono",monospace;font-weight:700;
+  font-size:.95rem;margin-right:.2rem;color:var(--ink);
+}
 
+/* Bevelled buttons. The pressed state is conveyed by an inverted
+   bevel AND a colour change AND a tick — three cues, not one. */
 .chip{
   min-height:var(--tap);
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.5rem 1.15rem;
-  font:inherit;font-weight:700;
-  background:transparent;color:var(--paper);
-  border:3px solid rgba(241,238,227,.55);
-  border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.5rem 1.1rem;
+  font-family:"Space Mono",monospace;font-weight:700;font-size:1rem;
+  background:var(--chrome);color:var(--ink);
+  border:2px solid var(--ink);border-radius:0;
+  box-shadow:inset -3px -3px 0 var(--bevel-dk),inset 3px 3px 0 var(--bevel-lt);
+  cursor:pointer;
 }
-.chip:hover{border-color:var(--brass)}
-.chip[aria-pressed="true"]{background:var(--brass);color:#14312B;border-color:var(--brass)}
-html.hc .chip{border-color:#FFD400;color:#fff}
+.chip:hover{background:var(--peach)}
+.chip[aria-pressed="true"]{
+  background:var(--mint);
+  box-shadow:inset 3px 3px 0 var(--bevel-dk),inset -3px -3px 0 var(--bevel-lt);
+}
+.chip[aria-pressed="true"]::before{content:"\2713";font-size:1.05em}
+html.hc .chip{background:#000;color:#fff;border-color:#FFD400}
+html.hc .chip:hover{background:#222}
 html.hc .chip[aria-pressed="true"]{background:#FFD400;color:#000}
 
 /* ============================================================
-   4. MAIN — FINDER
+   5. MAIN — FINDER
    ============================================================ */
-main{padding-block:2.5rem 3rem}
+main{padding-block:1rem 2.5rem}
 
 .section-head{margin-bottom:1.5rem}
-.section-head h2{font-size:clamp(1.6rem,4vw,2.1rem)}
-.section-head p{margin-top:.6rem;font-size:1.08rem;color:var(--ink-soft)}
-html.hc .section-head p{color:#fff}
+.section-head h2{font-size:clamp(1.7rem,4.5vw,2.3rem);color:var(--ink)}
+.section-head p{margin-top:.7rem;font-size:1.08rem;color:var(--ink-soft)}
+html.hc .section-head h2,html.hc .section-head p{color:#fff}
 
 .finder{display:grid;gap:1.5rem;grid-template-columns:1fr}
 @media (min-width:60rem){
@@ -172,208 +255,199 @@ html.hc .section-head p{color:#fff}
 }
 
 /* Map */
-.map-frame{
-  background:var(--card);
-  border:3px solid var(--ink);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-html.hc .map-frame{border-color:#FFD400}
+.map-frame{background:var(--chrome)}
 
 /* Deliberately px/vh, not rem. Text size should scale text, not the
-   size of the map viewport — and a map that grows to 830px tall at
-   "Largest" pushes everything else off the screen. */
+   size of the map viewport. */
 #map{
   height:clamp(360px,55vh,560px);
-  background:#DDD9CC;
+  background:#D8D2E4;
+  border-bottom:3px solid var(--ink);
 }
+html.hc #map{border-bottom-color:#FFD400}
 html.hc .leaflet-tile-pane{filter:grayscale(1) contrast(1.35) brightness(.82)}
 
 .map-note{
-  padding:.75rem 1rem;border-top:2px solid var(--line);
+  padding:.8rem 1rem;background:var(--paper);
   font-size:.92rem;color:var(--ink-soft);
 }
 html.hc .map-note{color:#fff}
+.map-fallback{padding:1.5rem;font-size:1.05rem;background:var(--paper)}
 
-.map-fallback{padding:1.5rem;font-size:1.05rem}
-
-/* Leaflet controls sized for real fingers */
 .leaflet-touch .leaflet-bar a{width:2.6rem;height:2.6rem;line-height:2.6rem;font-size:1.4rem}
+.leaflet-touch .leaflet-bar{border:2px solid var(--ink)}
 .leaflet-container{font-family:inherit;font-size:.9rem}
-.leaflet-container a{color:var(--pillar)}
+.leaflet-container a{color:var(--accent)}
 
-/* Custom markers */
-.pin{background:none;border:0}
-/* Sized in px, not rem: map pins must stay in step with Leaflet's
-   iconSize, and would otherwise swamp the map at "Largest" text.
-   --pin-scale is driven by the zoom level; see setPinScale() below. */
+/* Markers. Icon artwork itself is untouched — only the tile around it. */
 .leaflet-container{--pin-scale:1}
 .pin__body{
   position:relative;
   width:56px;height:56px;
   display:flex;align-items:center;justify-content:center;
   background:var(--card);
-  border:3px solid var(--ink);border-radius:14px;
-  box-shadow:0 3px 0 rgba(20,49,43,.35);
+  border:3px solid var(--ink);border-radius:0;
+  box-shadow:4px 4px 0 rgba(18,18,26,.55);
   cursor:pointer;
   transform:scale(var(--pin-scale));
   transform-origin:50% 50%;
   transition:transform .2s ease-out;
 }
 .pin__body svg{width:44px;height:44px}
-
-/* Outline the scaled body, not the fixed-size wrapper, or the focus
-   ring sits inside the pin at high zoom. */
 .pin.leaflet-marker-icon:focus-visible{outline:none}
 .pin:focus-visible .pin__body{outline:4px solid var(--ring);outline-offset:3px}
+
 .pin__num{
-  position:absolute;top:-.55rem;right:-.55rem;
-  min-width:1.5rem;height:1.5rem;padding:0 .3rem;
+  position:absolute;top:-.6rem;right:-.6rem;
+  min-width:1.55rem;height:1.55rem;padding:0 .3rem;
   display:flex;align-items:center;justify-content:center;
-  background:var(--pillar);color:#fff;
-  font-size:.85rem;font-weight:700;line-height:1;
-  border-radius:999px;border:2px solid var(--card);
+  background:var(--accent);color:#fff;
+  font-family:"Space Mono",monospace;font-size:.85rem;font-weight:700;line-height:1;
+  border:2px solid var(--ink);border-radius:0;
 }
-/* The illustrations are multi-colour, so high contrast keeps a white
-   tile behind them rather than inverting them into mush. */
 html.hc .pin__body{background:#FFF;border-color:#FFD400;border-width:4px}
 html.hc .pin__num{background:#FFD400;color:#000;border-color:#000}
 
-/* Place list — the same five destinations, reachable without the map */
-.places{display:grid;gap:.85rem}
-
+/* Place list */
+.places{display:grid;gap:1rem}
 .place{
   width:100%;min-height:var(--tap);
   display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;
   padding:1rem 1.1rem;text-align:left;
   font:inherit;color:var(--ink);
   background:var(--card);
-  border:3px solid var(--ink);border-radius:var(--radius);
-  box-shadow:var(--shadow);cursor:pointer;
+  border:3px solid var(--ink);border-radius:0;
+  box-shadow:var(--hard-sm);cursor:pointer;
 }
-.place:hover{background:#FFFBF0}
+.place:hover{background:var(--peach)}
 html.hc .place{background:#000;border-color:#FFD400;color:#fff}
-html.hc .place:hover{background:#1a1a1a}
+html.hc .place:hover{background:#222}
 
 .place__icon{
   width:4.4rem;height:4.4rem;flex:none;
   display:flex;align-items:center;justify-content:center;
-  background:var(--paper);border-radius:12px;position:relative;
+  background:var(--paper);border:2px solid var(--ink);position:relative;
 }
 .place__icon svg{width:3.5rem;height:3.5rem}
 html.hc .place__icon{background:#FFF;border:3px solid #FFD400}
 
 .place__num{
-  position:absolute;top:-.5rem;left:-.5rem;
-  min-width:1.4rem;height:1.4rem;
+  position:absolute;top:-.55rem;left:-.55rem;
+  min-width:1.5rem;height:1.5rem;
   display:flex;align-items:center;justify-content:center;
-  background:var(--pillar);color:#fff;
-  font-size:.8rem;font-weight:700;border-radius:999px;
+  background:var(--accent);color:#fff;
+  font-family:"Space Mono",monospace;font-size:.8rem;font-weight:700;
+  border:2px solid var(--ink);
 }
-html.hc .place__num{background:#FFD400;color:#000}
+html.hc .place__num{background:#FFD400;color:#000;border-color:#000}
 
-.place__name{font-family:Bitter,Georgia,serif;font-weight:700;font-size:1.12rem;line-height:1.25}
-.place__kind{display:block;font-family:inherit;font-weight:400;font-size:.95rem;color:var(--ink-soft);margin-top:.15rem}
+.place__name{font-family:Comfortaa,"Trebuchet MS",sans-serif;font-weight:700;font-size:1.14rem;line-height:1.28}
+.place__kind{
+  display:block;font-family:"Space Mono",monospace;font-weight:400;
+  font-size:.9rem;color:var(--ink-soft);margin-top:.25rem;
+}
 html.hc .place__kind{color:#fff}
-.place__go{font-size:1.5rem;color:var(--pillar);flex:none}
+.place__go{font-size:1.3rem;color:var(--accent);flex:none}
 
 /* ============================================================
-   5. GUIDE DIALOG
+   6. GUIDE DIALOG
    ============================================================ */
 #guide-dialog{
   width:min(100% - 1.5rem,46rem);
   max-height:88vh;
   padding:0;margin:auto;
-  color:var(--ink);background:var(--card);
-  border:4px solid var(--ink);border-radius:var(--radius);
-  box-shadow:0 24px 60px -20px rgba(20,49,43,.65);
+  color:var(--ink);background:var(--paper);
+  border:4px solid var(--ink);border-radius:0;
+  box-shadow:10px 10px 0 rgba(18,18,26,.55);
 }
-#guide-dialog::backdrop{background:rgba(20,49,43,.72)}
+#guide-dialog::backdrop{background:rgba(40,20,60,.72)}
 html.hc #guide-dialog{background:#000;border-color:#FFD400;color:#fff}
-html.hc #guide-dialog::backdrop{background:rgba(0,0,0,.92)}
+html.hc #guide-dialog::backdrop{background:rgba(0,0,0,.94)}
 
-/* Fallback path for browsers without showModal() */
 #guide-dialog:not([open]){display:none}
 #guide-dialog.is-fallback{position:fixed;inset:2rem auto auto 50%;transform:translateX(-50%);z-index:1000}
 
 .dialog__head{
   position:sticky;top:0;z-index:2;
   display:flex;gap:1rem;align-items:flex-start;justify-content:space-between;
-  padding:1.35rem 1.35rem 1.1rem;
-  background:var(--ink);color:var(--paper);
+  padding:1rem 1.1rem;
+  background:linear-gradient(90deg,var(--pink) 0%,var(--lilac) 52%,var(--mint) 100%);
+  border-bottom:3px solid var(--ink);
+  color:var(--ink);
 }
-html.hc .dialog__head{background:#000;border-bottom:3px solid #FFD400}
-.dialog__head .close{--ring:#FFD86B}
+html.hc .dialog__head{background:#000;border-bottom-color:#FFD400;color:#fff}
 
-.dialog__title{font-size:1.5rem;line-height:1.2}
-.dialog__where{margin-top:.35rem;font-size:.98rem;color:#DCD7C8}
+.dialog__title{font-size:1.45rem}
+.dialog__where{
+  margin-top:.35rem;font-family:"Space Mono",monospace;
+  font-size:.92rem;color:#3B2440;
+}
 html.hc .dialog__where{color:#fff}
 
 .close{
   flex:none;min-height:var(--tap);
   display:inline-flex;align-items:center;gap:.5rem;
-  padding:.5rem 1.1rem;font:inherit;font-weight:700;
-  background:var(--brass);color:#14312B;
-  border:3px solid var(--brass);border-radius:999px;cursor:pointer;
+  padding:.5rem 1.1rem;
+  font-family:"Space Mono",monospace;font-weight:700;font-size:1rem;
+  background:var(--chrome);color:var(--ink);
+  border:2px solid var(--ink);border-radius:0;
+  box-shadow:inset -3px -3px 0 var(--bevel-dk),inset 3px 3px 0 var(--bevel-lt);
+  cursor:pointer;
 }
-html.hc .close{background:#FFD400;color:#000;border-color:#FFD400}
+.close:hover{background:var(--peach)}
+html.hc .close{background:#FFD400;color:#000;border-color:#FFD400;box-shadow:none}
 
-.dialog__body{padding:1.35rem;overflow-y:auto;max-height:calc(88vh - 8rem)}
+.dialog__body{padding:1.35rem;overflow-y:auto;max-height:calc(88vh - 8rem);background:var(--paper)}
+html.hc .dialog__body{background:#000}
 
 .draft-note{
   display:flex;gap:.7rem;align-items:flex-start;
-  padding:.85rem 1rem;margin-bottom:1.25rem;
-  background:#FDF3DC;border-left:6px solid var(--brass);border-radius:8px;
-  font-size:.98rem;
+  padding:.9rem 1rem;margin-bottom:1.25rem;
+  background:var(--card);border:3px solid var(--ink);
+  box-shadow:var(--hard-sm);font-size:.98rem;
 }
-html.hc .draft-note{background:#000;border:3px solid #FFD400;color:#fff}
+html.hc .draft-note{background:#000;border-color:#FFD400;color:#fff}
 
-.guide{padding:1.15rem 0;border-top:2px solid var(--line)}
+.guide{padding:1.15rem 0;border-top:3px solid var(--lilac)}
 .guide:first-of-type{border-top:0;padding-top:0}
-.guide h3{font-size:1.22rem}
+.guide h3{font-size:1.2rem}
 .guide__summary{margin-top:.4rem;color:var(--ink-soft)}
+html.hc .guide{border-top-color:#FFD400}
 html.hc .guide__summary{color:#fff}
 
 .guide__steps{margin-top:.9rem;display:grid;gap:.7rem;counter-reset:step}
-.guide__steps li{
-  position:relative;padding-left:2.6rem;counter-increment:step;
-}
+.guide__steps li{position:relative;padding-left:2.9rem;counter-increment:step}
 .guide__steps li::before{
   content:counter(step);
   position:absolute;left:0;top:.05rem;
-  width:1.9rem;height:1.9rem;
+  width:2rem;height:2rem;
   display:flex;align-items:center;justify-content:center;
-  background:var(--ink);color:var(--paper);
-  font-size:.9rem;font-weight:700;border-radius:999px;
+  background:var(--lilac);color:var(--ink);
+  font-family:"Space Mono",monospace;font-size:.9rem;font-weight:700;
+  border:2px solid var(--ink);
 }
-html.hc .guide__steps li::before{background:#FFD400;color:#000}
+html.hc .guide__steps li::before{background:#FFD400;color:#000;border-color:#FFD400}
 
 .dialog__foot{
-  padding:1.1rem 1.35rem 1.4rem;border-top:2px solid var(--line);
+  padding:1.1rem;border-top:3px solid var(--ink);background:var(--chrome);
   display:flex;flex-wrap:wrap;gap:.85rem;align-items:center;
 }
-.dialog__foot .close{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-html.hc .dialog__foot .close{background:#FFD400;color:#000;border-color:#FFD400}
-.dialog__foot p{font-size:.95rem;color:var(--ink-soft)}
+.dialog__foot p{font-size:.95rem;color:var(--ink)}
+html.hc .dialog__foot{background:#000;border-top-color:#FFD400}
 html.hc .dialog__foot p{color:#fff}
 
 /* ============================================================
-   6. FOOTER
+   7. FOOTER
    ============================================================ */
-.site-foot{
-  --ring:#FFD86B;
-  margin-top:1rem;padding-block:2.25rem 3rem;
-  background:var(--ink);color:#E7E3D6;
-}
-html.hc .site-foot{background:#000;color:#fff;border-top:3px solid #FFD400}
-.site-foot h2{font-size:1.3rem;color:var(--paper)}
-.site-foot p{margin-top:.6rem}
-.site-foot a{color:var(--brass)}
-html.hc .site-foot a{color:#FFD400}
+.site-foot{padding-block:1rem 3rem}
+.site-foot .screen{padding:1.75rem 1.5rem}
+.site-foot h2{font-size:1.4rem;color:var(--screen-head)}
+.site-foot p{margin-top:.7rem;color:var(--screen-body)}
+.site-foot a{color:var(--screen-mono)}
+.site-foot strong{color:var(--screen-head)}
 
 /* ============================================================
-   7. MOTION
+   8. MOTION
    ============================================================ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
@@ -491,15 +565,33 @@ html.hc .site-foot a{color:#FFD400}
 
 <header class="banner">
   <div class="wrap">
-    <p class="banner__eyebrow">Digital hub · BEAT, Hawksworth</p>
-    <h1>Grandfriends Café</h1>
-    <p class="banner__lede">
-      A great deal of everyday life has quietly moved onto a screen. These guides
-      go through it a small step at a time, alongside a grandfriend who has the
-      time to show you. Thursdays, 4–6pm at BEAT.
-    </p>
+    <div class="win">
+      <div class="win__bar">
+        <span>grandfriends_cafe.exe</span>
+        <span class="win__dots" aria-hidden="true">
+          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
+        </span>
+      </div>
+      <div class="screen">
+        <p class="banner__eyebrow">Digital hub · BEAT, Hawksworth</p>
+        <h1>Grandfriends Café</h1>
+        <p class="banner__lede">
+          A great deal of everyday life has quietly moved onto a screen. These guides
+          go through it a small step at a time, alongside a grandfriend who has the
+          time to show you. Thursdays, 4–6pm at BEAT.
+        </p>
+      </div>
+      <p class="banner__strip">BEAT: Belonging, Empowering and Thriving</p>
+    </div>
 
-    <div class="settings" role="group" aria-label="Page settings">
+    <div class="win settings-win">
+      <div class="win__bar">
+        <span>settings</span>
+        <span class="win__dots" aria-hidden="true">
+          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
+        </span>
+      </div>
+      <div class="settings" role="group" aria-label="Page settings">
       <div class="settings__group">
         <span class="settings__label" id="size-label">Text size</span>
         <div role="group" aria-labelledby="size-label" style="display:flex;gap:.6rem;flex-wrap:wrap">
@@ -515,6 +607,7 @@ html.hc .site-foot a{color:#FFD400}
                 aria-labelledby="contrast-label contrast-toggle" aria-pressed="false">
           High contrast
         </button>
+      </div>
       </div>
     </div>
   </div>
@@ -547,7 +640,13 @@ html.hc .site-foot a{color:#FFD400}
     </noscript>
 
     <div class="finder">
-      <div class="map-frame">
+      <div class="win map-frame">
+        <div class="win__bar">
+          <span>hawksworth_wood.map</span>
+          <span class="win__dots" aria-hidden="true">
+            <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
+          </span>
+        </div>
         <div id="map" role="application"
              aria-label="Map of Hawksworth Wood with five landmarks. Each landmark is also listed as a button below the map."></div>
         <p class="map-note">
@@ -567,6 +666,14 @@ html.hc .site-foot a{color:#FFD400}
 
 <footer class="site-foot">
   <div class="wrap">
+    <div class="win">
+      <div class="win__bar">
+        <span>read_me.txt</span>
+        <span class="win__dots" aria-hidden="true">
+          <span class="win__dot">_</span><span class="win__dot">□</span><span class="win__dot">✕</span>
+        </span>
+      </div>
+      <div class="screen">
     <h2>Come along on a Thursday</h2>
     <p>
       Grandfriends Café runs at BEAT on Lea Farm Mount, Thursdays from 4 to 6pm.
@@ -586,6 +693,8 @@ html.hc .site-foot a{color:#FFD400}
     <p style="font-size:.9rem;margin-top:1.25rem">
       Map data © <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors.
     </p>
+      </div>
+    </div>
   </div>
 </footer>
 
